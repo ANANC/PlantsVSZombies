@@ -48,4 +48,14 @@ public class MapObjectManager
             MapObjectList.Remove(mapObject);
         }
     }
+
+    public MapObject GetMapObject(int id)
+    {
+        MapObject mapObject;
+        if (MapObjectDict.TryGetValue(id, out mapObject))
+        {
+            return mapObject;
+        }
+        return null;
+    }
 }
