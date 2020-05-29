@@ -5,15 +5,22 @@ using UnityEngine;
 public interface IBehavior {
      void Enter();
      void Exist();
+     bool Execute();
 }
 
 public class ContinueBehavior: IBehavior
 {
-    private int m_CurTime;
+    private float CurTime;
+    private float FinishTime;
+
+    public ContinueBehavior(float finishTime)
+    {
+        FinishTime = finishTime;
+    }
 
     public void Enter()
     {
-        m_CurTime = 0;
+        CurTime = 0;
     }
 
     public void Exist()
@@ -21,35 +28,52 @@ public class ContinueBehavior: IBehavior
 
     }
 
-    public bool TimeContinue(float finishTime)
+    public bool Execute()
     {
-        m_CurTime += 1;
-        return m_CurTime > finishTime;
+        if(FinishTime == -1)
+        {
+            return false;
+        }
+        return TimeContinue();
+    }
+
+    private bool TimeContinue()
+    {
+        CurTime += 1;
+        return CurTime > FinishTime;
     }
 }
 
-public class TouchBehavior : IBehavior {
+public class TouchBehavior : IBehavior
+{
+    private bool Touch;
     public void Enter()
     {
-
+        Touch = false;
     }
     public void Exist()
     {
 
     }
 
-    public bool TouchOther(Transform follow, Vector3 dir, float distance, int layerMask, out Transform touch)
+    public bool Execute()
+    {
+        return Touch;
+    }
+
+    public static void TouchOther(TouchBehavior behaviour,Transform follow, Vector3 dir, float distance, int layerMask, out Transform touch)
     {
         touch = null;
+        behaviour.Touch = false;
 
         RaycastHit hitInfo;
         if (Physics.Raycast(follow.position, dir, out hitInfo, distance, layerMask))
         {
             touch = hitInfo.collider.transform;
 
-            return true;
+            behaviour.Touch = true;
         }
-        return false;
+
     }
 }
 

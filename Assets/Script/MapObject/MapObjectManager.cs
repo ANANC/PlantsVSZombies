@@ -2,26 +2,47 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MapObjectManager
+public class MapObjectManager:IManager
 {
-    private List<MapObject> MapObjectList = new List<MapObject>();
-    private Dictionary<int, MapObject> MapObjectDict = new Dictionary<int, MapObject>();
+    private List<MapObject> MapObjectList;
+    private Dictionary<int, MapObject> MapObjectDict;
 
-    private int m_Auto = 1;
+    private int AutoId = 1;
 
-    public MapObject AddMapObject()
+    public void Init()
+    {
+        MapObjectList = new List<MapObject>();
+        MapObjectDict = new Dictionary<int, MapObject>();
+    }
+
+    public void UnInit()
+    {
+
+    }
+
+    public void Start()
+    {
+
+    }
+
+    public void Update()
+    {
+
+    }
+
+    public MapObject InstanceMapObject()
     {
         MapObject mapObject = CreateMapObject();
-        mapObject.GetAttribute<MapOjectAttribute>().Id = m_Auto;
-        m_Auto += 1;
+        mapObject.GetAttribute<MapOjectAttribute>().Id = AutoId;
+        AutoId += 1;
 
         MapObjectList.Add(mapObject);
-        MapObjectDict.Add(m_Auto, mapObject);
+        MapObjectDict.Add(AutoId, mapObject);
 
         return mapObject;
     }
 
-    public MapObject CreateMapObject()
+    private MapObject CreateMapObject()
     {
         MapObject mapObject = new MapObject();
         IAttribute[] attributes = new IAttribute[]
@@ -58,4 +79,5 @@ public class MapObjectManager
         }
         return null;
     }
+
 }
