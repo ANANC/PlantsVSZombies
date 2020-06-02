@@ -85,7 +85,7 @@ public class CreateMapObjectBehavior : LogicBehavior
 
         CreateBehaviorGlobalInfo createBehaviorGlobalInfo = new CreateBehaviorGlobalInfo();
         createBehaviorGlobalInfo.mapObject = mapObject;
-        GlobalEnvironmentInfo.Add<CreateBehaviorGlobalInfo>(createBehaviorGlobalInfo);
+        Node.GlobalEnvironmentInfo.Add<CreateBehaviorGlobalInfo>(createBehaviorGlobalInfo);
 
     }
 
@@ -128,7 +128,7 @@ public class ProcessTargetMoveBehavior : LogicBehavior
     public override void Enter()
     {
         Info = (MoveBehaviorInfo)Enviorment;
-        Info.targer = GlobalEnvironmentInfo.Get<CreateMapObjectBehavior.CreateBehaviorGlobalInfo>().mapObject;
+        Info.targer = Node.GlobalEnvironmentInfo.Get<CreateMapObjectBehavior.CreateBehaviorGlobalInfo>().mapObject;
     }
 
     public override void Execute()
@@ -159,16 +159,16 @@ public class TouchBehavior :LogicBehavior
     public override void Enter()
     {
         Info = (TouchBehaviorInfo)Enviorment;
-        GlobalEnvironmentInfo.Add<TouchBehaviorGlobalInfo>(new TouchBehaviorGlobalInfo());
+        Node.GlobalEnvironmentInfo.Add<TouchBehaviorGlobalInfo>(new TouchBehaviorGlobalInfo());
     }
 
     public override void Execute()
     {
-        TouchBehaviorGlobalInfo touchGlobalInfo = GlobalEnvironmentInfo.Get<TouchBehaviorGlobalInfo>();
+        TouchBehaviorGlobalInfo touchGlobalInfo = Node.GlobalEnvironmentInfo.Get<TouchBehaviorGlobalInfo>();
         bool touch = TouchOther(Info.follow, Info.dir, Info.distance, Info.layerMask, out touchGlobalInfo.touch);
         if(touch)
         {
-            NodeBehavior.Complete = NodeBehavior.Complete || touch;
+            Node.Complete = Node.Complete || touch;
         }
     }
 

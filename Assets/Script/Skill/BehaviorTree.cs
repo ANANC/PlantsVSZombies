@@ -7,6 +7,10 @@ using UnityEngine;
 public abstract class NodeBehavior
 {
     public bool Complete { get; set; }
+
+    public BehaviorTree.EnvironmentInfo GlobalEnvironmentInfo;
+    public LogicBehavior LogicBehavior;
+
     public virtual void Enter() { }
     public virtual void Exist() { }
     public abstract void Execute();
@@ -16,10 +20,8 @@ public abstract class LogicBehavior
 {
     public class LogicBehaviorInfo { }
 
-    public BehaviorTree.EnvironmentInfo GlobalEnvironmentInfo;
+    public NodeBehavior Node;
     public LogicBehaviorInfo Enviorment;
-
-    public NodeBehavior NodeBehavior;
 
     public virtual void Enter() { }
     public virtual void Exist() { }
@@ -40,7 +42,7 @@ public class BehaviorTree
     {
         public int Id;
         public NodeType Type;
-        public LogicBehavior Behavior;
+        public NodeBehavior Behavior;
         public bool Enter;
     }
 
@@ -81,7 +83,7 @@ public class BehaviorTree
     private int AutoId = 0;
 
 
-    public void AddBehavior<T>(LogicBehavior behavior, NodeType nodeType) where T: LogicBehavior
+    public void AddBehavior<T>(T behavior, NodeType nodeType) where T: NodeBehavior
     {
         Node node = new Node();
         node.Id = AutoId;
@@ -119,10 +121,13 @@ public class BehaviorTree
                 node.Behavior.Enter();
             }
 
-            node.Behavior.NodeBehavior.Execute();
             node.Behavior.Execute();
+            if (node.Behavior.LogicBehavior != null)
+            {
+                node.Behavior.LogicBehavior.Execute();
+            }
 
-            bool finish = node.Behavior.NodeBehavior.Complete;
+            bool finish = node.Behavior.Complete;
 
             if (finish)
             {
