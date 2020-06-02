@@ -3,6 +3,31 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+public abstract class NodeBehavior
+{
+    public bool Complete { get; set; }
+    public virtual void Enter() { }
+    public virtual void Exist() { }
+    public abstract void Execute();
+}
+
+public abstract class LogicBehavior
+{
+    public class LogicBehaviorInfo { }
+
+    public BehaviorTree.EnvironmentInfo GlobalEnvironmentInfo;
+    public LogicBehaviorInfo Enviorment;
+
+    public NodeBehavior NodeBehavior;
+
+    public virtual void Enter() { }
+    public virtual void Exist() { }
+    public abstract void Execute();
+}
+
+public interface IBehaviorEnvironmentInfo { }
+
 public class BehaviorTree
 {
     public enum NodeType
@@ -15,45 +40,78 @@ public class BehaviorTree
     {
         public int Id;
         public NodeType Type;
-        public IBehavior Behavior;
-        public Action LogicAction;
-
+        public LogicBehavior Behavior;
         public bool Enter;
     }
 
-    public class NodeType<T>: Node where T : IBehavior
+    public class EnvironmentInfo
     {
-        public T BehaviorInstance;
+        private Dictionary<string, IBehaviorEnvironmentInfo> BehaviorEnvironmentInfoDict;
+
+        public void Add<T>(T info) where T : IBehaviorEnvironmentInfo
+        {
+            if (BehaviorEnvironmentInfoDict == null)
+            {
+                BehaviorEnvironmentInfoDict = new Dictionary<string, IBehaviorEnvironmentInfo>();
+            }
+            string typeName = info.GetType().Name;
+            if (BehaviorEnvironmentInfoDict.ContainsKey(typeName))
+            {
+                BehaviorEnvironmentInfoDict.Remove(typeName);
+            }
+            BehaviorEnvironmentInfoDict.Add(typeName, info);
+        }
+
+        public T Get<T>() where T : IBehaviorEnvironmentInfo
+        {
+            IBehaviorEnvironmentInfo info;
+            string typeName = typeof(T).Name;
+            if (BehaviorEnvironmentInfoDict.TryGetValue(typeName, out info))
+            {
+                return (T)info;
+
+            }
+            return default(T);
+        }
     }
 
-
-    private List<Node> Behaviors = new List<Node>();
-    private Dictionary<int , Node> BehaviorTypeDict = new Dictionary<int, Node>();
+    private List<Node> BehaviorList = new List<Node>();
+    private EnvironmentInfo Environment;
 
     private int AutoId = 0;
 
 
-    public void AddBehavior<T>(IBehavior behavior, NodeType nodeType,Action logicAction) where T: IBehavior
+    public void AddBehavior<T>(LogicBehavior behavior, NodeType nodeType) where T: LogicBehavior
     {
-        NodeType<T> node = new NodeType<T>();
+        Node node = new Node();
         node.Id = AutoId;
         node.Type = nodeType;
         node.Behavior = behavior;
-        node.BehaviorInstance = (T)behavior;
-        node.LogicAction = logicAction;
         node.Enter = false;
 
         AutoId += 1;
 
-        Behaviors.Add(node);
-        BehaviorTypeDict.Add(node.Id, node);
+        BehaviorList.Add(node);
     }
 
-    public bool Execute()
+    public void AddEnvironmentInfo<T>(T info)where T: IBehaviorEnvironmentInfo
     {
-        while (Behaviors.Count > 0)
+        Environment.Add<T>(info);
+    }
+
+    public void Execute()
+    {
+        for(int index = 0;index< BehaviorList.Count;index++)
         {
-            Node node = Behaviors[0];
+            BehaviorList[index].Behavior.GlobalEnvironmentInfo = Environment;
+        }
+    }
+
+    public bool Complete()
+    {
+        while (BehaviorList.Count > 0)
+        {
+            Node node = BehaviorList[0];
 
             if (!node.Enter)
             {
@@ -61,13 +119,15 @@ public class BehaviorTree
                 node.Behavior.Enter();
             }
 
-            node.LogicAction?.Invoke();
-            bool finish = node.Behavior.Execute();
+            node.Behavior.NodeBehavior.Execute();
+            node.Behavior.Execute();
 
-            if(finish)
+            bool finish = node.Behavior.NodeBehavior.Complete;
+
+            if (finish)
             {
                 node.Behavior.Exist();
-                Behaviors.RemoveAt(0);
+                BehaviorList.RemoveAt(0);
             }
 
             if(node.Type == NodeType.Serial)
@@ -76,6 +136,6 @@ public class BehaviorTree
             }
         }
 
-        return Behaviors.Count == 0;
+        return BehaviorList.Count == 0;
     }
 }
