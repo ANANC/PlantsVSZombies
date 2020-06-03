@@ -12,5 +12,6 @@ public static class GameDefine
     public static class Path
     {
         public const string Plant = "Art/Model/Prefab/Plant";
+        public const string Bullet = "Art/Module/Prefab/Bullet";
     }
 }

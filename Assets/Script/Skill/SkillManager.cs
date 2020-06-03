@@ -5,27 +5,6 @@ using UnityEngine;
 public class SkillManager : IManager
 {
 
-    public void FireBullet(MapObject user)
-    {
-        BehaviorTree behaviorTree = new BehaviorTree();
-
-        CreateMapObjectBehavior createMapObjectBehavior = new CreateMapObjectBehavior();
-        CreateMapObjectBehavior.CreateBehaviorInfo createBehaviorInfo = new CreateMapObjectBehavior.CreateBehaviorInfo();
-        createBehaviorInfo.Position = user.GetAttribute<MapOjectAttribute>().Position + Vector3.right * 20;
-        createBehaviorInfo.ResourcePath = "Art/Module/Prefab/Bullet";
-        createMapObjectBehavior.Enviorment = createBehaviorInfo;
-        createMapObjectBehavior.NodeBehavior = new SingleBehavior();
-        behaviorTree.AddBehavior<CreateMapObjectBehavior>(createMapObjectBehavior, BehaviorTree.NodeType.Serial);
-
-
-        ProcessTargetMoveBehavior moveBehavior = new ProcessTargetMoveBehavior();
-        ProcessTargetMoveBehavior.MoveBehaviorInfo moveBehaviorInfo = new ProcessTargetMoveBehavior.MoveBehaviorInfo();
-        moveBehaviorInfo.dir = Vector3.right;
-        moveBehaviorInfo.speed = 1;
-        moveBehavior.NodeBehavior = new ContinueBehavior(-1);
-
-    }
-
     private List<BehaviorTree> ExecuteSkillList;
     private List<BehaviorTree> AddSkillList;
     private List<BehaviorTree> DeleteSkillList;
@@ -77,4 +56,28 @@ public class SkillManager : IManager
             }
         }
     }
+
+    public void AddSkill(BehaviorTree skill)
+    {
+        AddSkillList.Add(skill);
+    }
+
+    // ----------------------------------------------------------------------------
+    public void FireBullet(MapObject user)
+    {
+        BehaviorTree behaviorTree = new BehaviorTree();
+
+        CreateMapObjectBehavior createMapObjectBehavior = new CreateMapObjectBehavior();
+        CreateMapObjectBehavior.CreateBehaviorInfo createBehaviorInfo = new CreateMapObjectBehavior.CreateBehaviorInfo();
+        createBehaviorInfo.Position = user.GetAttribute<MapOjectAttribute>().Position + Vector3.right * 20;
+        createBehaviorInfo.ResourcePath = GameDefine.Path.Bullet;
+        createMapObjectBehavior.Enviorment = createBehaviorInfo;
+        SingleBehavior singleBehavior = new SingleBehavior();
+        singleBehavior.LogicBehavior = createMapObjectBehavior;
+        createMapObjectBehavior.Node = singleBehavior;
+        behaviorTree.AddBehavior<SingleBehavior>(singleBehavior, BehaviorTree.NodeType.Serial);
+
+        AddSkill(behaviorTree);
+    }
+
 }
