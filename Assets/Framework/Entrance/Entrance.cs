@@ -8,6 +8,8 @@ public class Entrance : MonoBehaviour
     {
         FormworkRegister();
         GameRegister();
+
+        StartGame();
     }
 
     void Update()
@@ -18,12 +20,17 @@ public class Entrance : MonoBehaviour
     private void GameRegister()
     {
         GlobalEnvironment.Instance.AddManager<MapObjectManager>(new MapObjectManager());
-
+        GlobalEnvironment.Instance.AddManager<DailyManager>(new DailyManager());
+        GlobalEnvironment.Instance.AddManager<SceneManager>(new SceneManager());
     }
-
 
     private void FormworkRegister()
     {
         GlobalEnvironment.Instance.AddManager<ResourceManager>(new ResourceManager());
+    }
+
+    private void StartGame()
+    {
+
     }
 }

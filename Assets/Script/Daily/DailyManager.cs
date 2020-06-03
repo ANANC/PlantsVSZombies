@@ -2,18 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DailyManager:IManager
+public class DailyManager : IManager
 {
-    Dictionary<string, DailyAction> DailyTypeDict;
 
-    Dictionary<DailyAction, List<MapObject>> AddDict;
-    Dictionary<DailyAction, List<MapObject>> DeleteDict;
-    Dictionary<DailyAction, List<MapObject>> RegisterDict;
+    private List<DailyAction> AddList;
+    private List<DailyAction> DeleteList;
+    private List<DailyAction> RegisterList;
 
     public void Init()
     {
-        DailyTypeDict = new Dictionary<string, DailyAction>();
-        RegisterDict = new Dictionary<DailyAction, List<MapObject>>();
+        RegisterList = new List<DailyAction>();
+        AddList = new List<DailyAction>();
+        DeleteList = new List<DailyAction>();
     }
 
     public void UnInit()
@@ -29,28 +29,41 @@ public class DailyManager:IManager
 
     public void Update()
     {
+        if (AddList.Count > 0)
+        {
+            for (int index = 0; index < AddList.Count; index++)
+            {
+                RegisterList.Add(AddList[index]);
+            }
+            AddList.Clear();
+        }
 
+        if (DeleteList.Count > 0)
+        {
+            for (int index = 0; index < DeleteList.Count; index++)
+            {
+                RegisterList.Remove(DeleteList[index]);
+            }
+            DeleteList.Clear();
+        }
+
+        if (RegisterList.Count > 0)
+        {
+            for (int index = 0; index < RegisterList.Count; index++)
+            {
+                DailyAction dailyAction = RegisterList[index];
+                bool complete = dailyAction.Complete();
+                if (complete)
+                {
+                    DeleteList.Add(dailyAction);
+                }
+            }
+        }
     }
 
-    public void RegisterDailyAction<T>(MapObject mapObject) where T : DailyAction,new()
+    public void RegisterDailyAction<T>(T dailyAction) where T : DailyAction
     {
-        DailyAction dailyAction;
-        List<MapObject> mapObjects;
-
-        string typeName = typeof(T).Name;
-
-        if (!DailyTypeDict.TryGetValue(typeName, out dailyAction))
-        {
-            dailyAction = new T();
-            DailyTypeDict.Add(typeName, dailyAction);
-        }
-        if(!AddDict.TryGetValue(dailyAction,out mapObjects))
-        {
-            mapObjects = new List<MapObject>();
-            AddDict.Add(dailyAction, mapObjects);
-        }
-
-        mapObjects.Add(mapObject);
+        AddList.Add(dailyAction);
     }
 
 }

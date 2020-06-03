@@ -10,11 +10,19 @@ public abstract class DailyAction
     public void Init()
     {
         behaviorTree = Create();
+        behaviorTree.Execute();
     }
-    public void UnInit()
-    {
+    public void UnInit() {}
 
-    }
     public abstract BehaviorTree Create();
-    public abstract void Execute();
+
+    public bool Complete()
+    {
+        if (behaviorTree == null)
+        {
+            return true;
+        }
+
+        return behaviorTree.Complete();
+    }
 }
