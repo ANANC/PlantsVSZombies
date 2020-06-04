@@ -22,6 +22,7 @@ public class Entrance : MonoBehaviour
         GlobalEnvironment.Instance.AddManager<MapObjectManager>(new MapObjectManager());
         GlobalEnvironment.Instance.AddManager<DailyManager>(new DailyManager());
         GlobalEnvironment.Instance.AddManager<SceneManager>(new SceneManager());
+        GlobalEnvironment.Instance.AddManager<RepresentManager>(new RepresentManager());
     }
 
     private void FormworkRegister()

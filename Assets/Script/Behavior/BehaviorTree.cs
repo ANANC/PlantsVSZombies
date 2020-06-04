@@ -7,8 +7,9 @@ using UnityEngine;
 public abstract class NodeBehavior
 {
     public bool Complete { get; set; }
+    public string JumpNodeName { get; set; }
 
-    public BehaviorTree.EnvironmentInfo GlobalEnvironmentInfo;
+    public BehaviorTree BehaviorTree;
     public LogicBehavior LogicBehavior;
 
     public virtual void Enter() { }
@@ -35,11 +36,13 @@ public class BehaviorTree
     public enum NodeType
     {
         Serial,
-        Parallel
+        ParallelAnd,
+        ParallelOr,
     }
 
     public class Node
     {
+        public string Name;
         public int Id;
         public NodeType Type;
         public NodeBehavior Behavior;
@@ -78,14 +81,17 @@ public class BehaviorTree
     }
 
     private List<Node> BehaviorList = new List<Node>();
-    private EnvironmentInfo Environment;
+    public EnvironmentInfo Environment;
 
+    private NodeType LastNodeType;
+    private bool NodeFinish;
     private int AutoId = 0;
 
 
-    public void AddBehavior<T>(T behavior, NodeType nodeType) where T: NodeBehavior
+    public void AddBehavior<T>(string name,T behavior, NodeType nodeType) where T: NodeBehavior
     {
         Node node = new Node();
+        node.Name = name;
         node.Id = AutoId;
         node.Type = nodeType;
         node.Behavior = behavior;
@@ -101,19 +107,25 @@ public class BehaviorTree
         Environment.Add<T>(info);
     }
 
+    public void ForceFinish()
+    {
+        BehaviorList.Clear();
+    }
+
     public void Execute()
     {
         for(int index = 0;index< BehaviorList.Count;index++)
         {
-            BehaviorList[index].Behavior.GlobalEnvironmentInfo = Environment;
+            BehaviorList[index].Behavior.BehaviorTree = this;
         }
     }
 
     public bool Complete()
     {
+        int nodeIndex = 0;
         while (BehaviorList.Count > 0)
         {
-            Node node = BehaviorList[0];
+            Node node = BehaviorList[nodeIndex];
 
             if (!node.Enter)
             {
@@ -128,16 +140,56 @@ public class BehaviorTree
             }
 
             bool finish = node.Behavior.Complete;
+            if (nodeIndex == 0)
+            {
+                NodeFinish = finish;
+            }
+            else if (LastNodeType == NodeType.ParallelAnd)
+            {
+                NodeFinish = finish && NodeFinish;
+            }
+            else if (LastNodeType == NodeType.ParallelOr)
+            {
+                NodeFinish = finish || NodeFinish;
+            }
+
+            LastNodeType = node.Type;
 
             if (finish)
             {
                 node.Behavior.Exist();
                 BehaviorList.RemoveAt(0);
+
+                if (!string.IsNullOrEmpty(node.Behavior.JumpNodeName))
+                {
+                    int findIndex = -1;
+                    for (int index = 0; index < BehaviorList.Count; index++)
+                    {
+                        if (BehaviorList[index].Name == node.Behavior.JumpNodeName)
+                        {
+                            findIndex = index;
+                            break;
+                        }
+                    }
+                    if (findIndex != -1)
+                    {
+                        BehaviorList.RemoveRange(0, findIndex);
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                nodeIndex += 1;
             }
 
-            if(node.Type == NodeType.Serial)
+            if (node.Type == NodeType.Serial)
             {
                 break;
+            }
+            else if (NodeFinish)
+            {
+                BehaviorList.RemoveRange(0, nodeIndex);
             }
         }
 
