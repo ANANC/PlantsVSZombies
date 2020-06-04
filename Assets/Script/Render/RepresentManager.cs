@@ -51,7 +51,7 @@ public class RepresentManager : IManager
                 MapObject mapObject = MapObjectList[index];
 
                 Move(mapObject);
-                Death(mapObject);
+                //Death(mapObject);
             }
         }
     }
@@ -81,7 +81,7 @@ public class RepresentManager : IManager
         Vector3 transformPos = art.transform.position;
         Vector3 distance = attribute.Position - transformPos;
 
-        float speed = 0.0001f;
+        float speed = 0.001f;
 
         if (distance.x > 0.01 || distance.x< -0.01)
         {

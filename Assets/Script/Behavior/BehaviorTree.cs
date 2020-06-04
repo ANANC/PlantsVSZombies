@@ -81,7 +81,7 @@ public class BehaviorTree
     }
 
     private List<Node> BehaviorList = new List<Node>();
-    public EnvironmentInfo Environment;
+    public EnvironmentInfo Environment = new EnvironmentInfo();
 
     private NodeType LastNodeType;
     private bool NodeFinish;
@@ -131,6 +131,10 @@ public class BehaviorTree
             {
                 node.Enter = true;
                 node.Behavior.Enter();
+                if (node.Behavior.LogicBehavior != null)
+                {
+                    node.Behavior.LogicBehavior.Enter();
+                }
             }
 
             node.Behavior.Execute();

@@ -9,7 +9,9 @@ public class Entrance : MonoBehaviour
         FormworkRegister();
         GameRegister();
 
-        StartGame();
+        GlobalEnvironment.Instance.Start();
+
+       StartGame();
     }
 
     void Update()
@@ -23,6 +25,7 @@ public class Entrance : MonoBehaviour
         GlobalEnvironment.Instance.AddManager<DailyManager>(new DailyManager());
         GlobalEnvironment.Instance.AddManager<SceneManager>(new SceneManager());
         GlobalEnvironment.Instance.AddManager<RepresentManager>(new RepresentManager());
+        GlobalEnvironment.Instance.AddManager<SkillManager>(new SkillManager());
     }
 
     private void FormworkRegister()
@@ -32,6 +35,7 @@ public class Entrance : MonoBehaviour
 
     private void StartGame()
     {
-
+        SceneManager sceneManager = GlobalEnvironment.Instance.Get<SceneManager>();
+        sceneManager.Enter(GameDefine.Scene.Battle);
     }
 }

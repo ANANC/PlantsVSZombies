@@ -5,15 +5,15 @@ using UnityEngine;
 public class SkillManager : IManager
 {
 
-    private List<BehaviorTree> ExecuteSkillList;
-    private List<BehaviorTree> AddSkillList;
-    private List<BehaviorTree> DeleteSkillList;
+    private List<Skill> ExecuteSkillList;
+    private List<Skill> AddSkillList;
+    private List<Skill> DeleteSkillList;
 
     public void Init()
     {
-        ExecuteSkillList = new List<BehaviorTree>();
-        AddSkillList = new List<BehaviorTree>();
-        DeleteSkillList = new List<BehaviorTree>();
+        ExecuteSkillList = new List<Skill>();
+        AddSkillList = new List<Skill>();
+        DeleteSkillList = new List<Skill>();
     }
 
     public void UnInit()
@@ -32,7 +32,7 @@ public class SkillManager : IManager
         {
             for (int index = 0; index < AddSkillList.Count; index++)
             {
-                AddSkillList[index].Execute();
+                AddSkillList[index].Init();
                 ExecuteSkillList.Add(AddSkillList[index]);
             }
             AddSkillList.Clear();
@@ -49,35 +49,18 @@ public class SkillManager : IManager
 
         for (int index = 0; index < ExecuteSkillList.Count; index++)
         {
-            BehaviorTree behaviorTree = ExecuteSkillList[index];
-            if (behaviorTree.Complete())
+            Skill skill = ExecuteSkillList[index];
+            if (skill.Complete())
             {
-                DeleteSkillList.Add(behaviorTree);
+                DeleteSkillList.Add(skill);
             }
         }
     }
 
-    public void AddSkill(BehaviorTree skill)
+    public void UseSkill(Skill skill,MapObject mapObject)
     {
+        skill.mapObject = mapObject;
         AddSkillList.Add(skill);
-    }
-
-    // ----------------------------------------------------------------------------
-    public void FireBullet(MapObject user)
-    {
-        BehaviorTree behaviorTree = new BehaviorTree();
-
-        CreateMapObjectBehavior createMapObjectBehavior = new CreateMapObjectBehavior();
-        CreateMapObjectBehavior.CreateBehaviorInfo createBehaviorInfo = new CreateMapObjectBehavior.CreateBehaviorInfo();
-        createBehaviorInfo.Position = user.GetAttribute<MapOjectAttribute>().Position + Vector3.right * 20;
-        createBehaviorInfo.ResourcePath = GameDefine.Path.Bullet;
-        createMapObjectBehavior.Enviorment = createBehaviorInfo;
-        SingleBehavior singleBehavior = new SingleBehavior();
-        singleBehavior.LogicBehavior = createMapObjectBehavior;
-        createMapObjectBehavior.Node = singleBehavior;
-        behaviorTree.AddBehavior<SingleBehavior>(singleBehavior, BehaviorTree.NodeType.Serial);
-
-        AddSkill(behaviorTree);
     }
 
 }

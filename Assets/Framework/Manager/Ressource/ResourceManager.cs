@@ -21,7 +21,7 @@ public class ResourceManager: IManager
         {
             string path = Application.dataPath + "/../Library/ScriptAssemblies/Assembly-CSharp-Editor.dll";
             Assembly assembly = Assembly.LoadFile(path);
-            Type type = assembly.GetType("ANFramework.EditorReousrceLoader");
+            Type type = assembly.GetType("EditorReousrceLoader");
             Object loader = Activator.CreateInstance(type, null);
 
             m_Loader = loader as IReousrceLoader;

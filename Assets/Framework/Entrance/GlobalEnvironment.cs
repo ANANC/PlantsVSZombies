@@ -43,6 +43,17 @@ public class GlobalEnvironment
 
     }
 
+    public void Start()
+    {
+        if (ManagerList.Count > 0)
+        {
+            for (int index = 0; index < ManagerList.Count; index++)
+            {
+                ManagerList[index].Start();
+            }
+        }
+    }
+
     public void Update()
     {
         if (AddList.Count > 0)

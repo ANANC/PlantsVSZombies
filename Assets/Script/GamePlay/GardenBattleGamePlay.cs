@@ -24,11 +24,11 @@ public class GardenBattleGamePlay : GamePlay
 
     }
 
-    public void CreatePlantToMap(string resPath, Vector3 logicPos)
+    public MapObject CreatePlantToMap(string resPath, Vector3 logicPos)
     {
         if (!gardenMap.IsCanCreateMapObjectToMap(logicPos))
         {
-            return;
+            return null;
         }
 
         // 逻辑
@@ -45,5 +45,6 @@ public class GardenBattleGamePlay : GamePlay
         mapObjectArtAttribute.transform = gameObject.transform;
         representManager.RegisterMapObject(mapObject);
 
+        return mapObject;
     }
 }

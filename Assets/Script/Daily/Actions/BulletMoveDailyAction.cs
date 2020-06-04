@@ -15,9 +15,9 @@ public class BulletMoveDailyAction : DailyAction
         moveBehaviorInfo.dir = Vector3.right;
         moveBehaviorInfo.targer = mapObject;
         moveBehavior.Enviorment = moveBehaviorInfo;
+        moveBehavior.Node = continueMove;
         continueMove.LogicBehavior = moveBehavior;
         behaviorTree.AddBehavior<ContinueBehavior>("move", continueMove, BehaviorTree.NodeType.ParallelOr);
-
 
         ContinueBehavior continueTouch = new ContinueBehavior(-1);
         TouchBehavior touchBehavior = new TouchBehavior();
@@ -27,6 +27,7 @@ public class BulletMoveDailyAction : DailyAction
         touchBehaviorInfo.layerMask = -1;
         touchBehaviorInfo.follow = mapObject.GetAttribute<MapObjectArtAttribute>().transform;
         touchBehavior.Enviorment = touchBehaviorInfo;
+        touchBehavior.Node = continueTouch;
         continueTouch.LogicBehavior = touchBehavior;
         behaviorTree.AddBehavior<ContinueBehavior>("touch", continueTouch, BehaviorTree.NodeType.Serial);
 

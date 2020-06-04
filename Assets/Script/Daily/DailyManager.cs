@@ -33,6 +33,7 @@ public class DailyManager : IManager
         {
             for (int index = 0; index < AddList.Count; index++)
             {
+                AddList[index].Init();
                 RegisterList.Add(AddList[index]);
             }
             AddList.Clear();
