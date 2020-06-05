@@ -194,6 +194,7 @@ public class BehaviorTree
             else if (NodeFinish)
             {
                 BehaviorList.RemoveRange(0, nodeIndex);
+                nodeIndex = 0;
             }
         }
 

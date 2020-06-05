@@ -4,16 +4,18 @@ using UnityEngine;
 
 public class DailyManager : IManager
 {
-
     private List<DailyAction> AddList;
     private List<DailyAction> DeleteList;
-    private List<DailyAction> RegisterList;
+    private List<DailyAction> ExecuteList;
+
+    private Dictionary<MapObject, List<DailyAction>> MapObjectRegisterDict;
 
     public void Init()
     {
-        RegisterList = new List<DailyAction>();
+        ExecuteList = new List<DailyAction>();
         AddList = new List<DailyAction>();
         DeleteList = new List<DailyAction>();
+        MapObjectRegisterDict = new Dictionary<MapObject, List<DailyAction>>();
     }
 
     public void UnInit()
@@ -34,7 +36,7 @@ public class DailyManager : IManager
             for (int index = 0; index < AddList.Count; index++)
             {
                 AddList[index].Init();
-                RegisterList.Add(AddList[index]);
+                ExecuteList.Add(AddList[index]);
             }
             AddList.Clear();
         }
@@ -43,16 +45,16 @@ public class DailyManager : IManager
         {
             for (int index = 0; index < DeleteList.Count; index++)
             {
-                RegisterList.Remove(DeleteList[index]);
+                ExecuteList.Remove(DeleteList[index]);
             }
             DeleteList.Clear();
         }
 
-        if (RegisterList.Count > 0)
+        if (ExecuteList.Count > 0)
         {
-            for (int index = 0; index < RegisterList.Count; index++)
+            for (int index = 0; index < ExecuteList.Count; index++)
             {
-                DailyAction dailyAction = RegisterList[index];
+                DailyAction dailyAction = ExecuteList[index];
                 bool complete = dailyAction.Complete();
                 if (complete)
                 {
@@ -65,6 +67,32 @@ public class DailyManager : IManager
     public void RegisterDailyAction<T>(T dailyAction) where T : DailyAction
     {
         AddList.Add(dailyAction);
+
+        MapObject mapObject = dailyAction.mapObject;
+        if(mapObject!= null)
+        {
+            List<DailyAction> dailyActions;
+            if(!MapObjectRegisterDict.TryGetValue(mapObject,out dailyActions))
+            {
+                dailyActions = new List<DailyAction>();
+                MapObjectRegisterDict.Add(mapObject, dailyActions);
+            }
+            dailyActions.Add(dailyAction);
+        }
     }
 
+    public void MapObjectUnReigisterAll(MapObject mapObject)
+    {
+        List<DailyAction> dailyActions;
+        if (!MapObjectRegisterDict.TryGetValue(mapObject, out dailyActions))
+        {
+            return;
+        }
+        MapObjectRegisterDict.Remove(mapObject);
+
+        for (int index = 0; index < dailyActions.Count; index++)
+        {
+            DeleteList.Add(dailyActions[index]);
+        }
+    }
 }

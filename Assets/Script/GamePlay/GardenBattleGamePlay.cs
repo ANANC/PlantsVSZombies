@@ -37,13 +37,15 @@ public class GardenBattleGamePlay : GamePlay
         MapOjectAttribute mapOjectAttribute = mapObject.GetAttribute<MapOjectAttribute>();
         Vector3 postion = new Vector3(logicPos.x * GameDefine.Art.GardenCellSize.x, logicPos.y * GameDefine.Art.GardenCellSize.y, 0);
         mapOjectAttribute.Position = postion;
+        mapOjectAttribute.Hp = 5;
 
         // 表现
         GameObject gameObject = GlobalEnvironment.Instance.Get<ResourceManager>().Instance(resPath);
         MapObjectArtAttribute mapObjectArtAttribute = mapObject.GetAttribute<MapObjectArtAttribute>();
         mapObjectArtAttribute.gameObject = gameObject;
         mapObjectArtAttribute.transform = gameObject.transform;
-        representManager.RegisterMapObject(mapObject);
+
+        representManager.RegisterMapObject<DeathArtHandle>(mapObject);
 
         return mapObject;
     }

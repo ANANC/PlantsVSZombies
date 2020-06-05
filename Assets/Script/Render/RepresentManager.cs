@@ -4,17 +4,32 @@ using UnityEngine;
 
 public class RepresentManager : IManager
 {
-    private List<MapObject> MapObjectList;
+    public enum ExecuteOrder
+    {
+        Normal,
+        Final,
+    }
 
-    private List<MapObject> AddMapObjectList;
-    private List<MapObject> DeleteMapObjectList;
+
+    private Dictionary<string, RepresentHandle> HandleInstanceDict;
+
+    private List<RepresentHandle> ExecuteList;
+    private Dictionary<RepresentHandle, List<MapObject>> HandleRegisterDict;
+    private Dictionary<MapObject, List<RepresentHandle>> MapObjectRegisterDict;
+
+    private List<RepresentHandle> AddMapObjectList;
+    private List<RepresentHandle> DeleteMapObjectList;
 
     public void Init()
     {
-        MapObjectList = new List<MapObject>();
-        AddMapObjectList = new List<MapObject>();
-        DeleteMapObjectList = new List<MapObject>();
+        HandleInstanceDict = new Dictionary<string, RepresentHandle>();
+        ExecuteList = new List<RepresentHandle>();
+        HandleRegisterDict = new Dictionary<RepresentHandle, List<MapObject>>();
+        MapObjectRegisterDict = new Dictionary<MapObject, List<RepresentHandle>>();
+        AddMapObjectList = new List<RepresentHandle>();
+        DeleteMapObjectList = new List<RepresentHandle>();
     }
+
     public void UnInit()
     {
 
@@ -28,89 +43,143 @@ public class RepresentManager : IManager
 
     public void Update()
     {
-        if(AddMapObjectList.Count>0)
+        if (AddMapObjectList.Count > 0)
         {
-            for(int index = 0;index< AddMapObjectList.Count;index++)
+            for (int index = 0; index < AddMapObjectList.Count; index++)
             {
-                MapObjectList.Add(AddMapObjectList[index]);
+                ExecuteList.Add(AddMapObjectList[index]);
             }
+            AddMapObjectList.Clear();
+            ExecuteList.Sort((left, right) =>
+            {
+                int leftOrder = (int)left.Order();
+                int rightOrder = (int)right.Order();
+                return leftOrder.CompareTo(rightOrder);
+            });
         }
 
         if(DeleteMapObjectList.Count >0)
         {
             for (int index = 0; index < DeleteMapObjectList.Count; index++)
             {
-                MapObjectList.Remove(DeleteMapObjectList[index]);
+                ExecuteList.Remove(DeleteMapObjectList[index]);
+                HandleRegisterDict.Remove(DeleteMapObjectList[index]);
             }
+            DeleteMapObjectList.Clear();
         }
 
-        if(MapObjectList.Count>0)
+        if(ExecuteList.Count>0)
         {
-            for(int index =0;index< MapObjectList.Count;index++)
+            for(int index =0;index< ExecuteList.Count;index++)
             {
-                MapObject mapObject = MapObjectList[index];
+                RepresentHandle handle = ExecuteList[index];
+                List<MapObject> mapObjects = HandleRegisterDict[handle];
 
-                Move(mapObject);
-                //Death(mapObject);
+                if(mapObjects.Count == 0)
+                {
+                    DeleteMapObjectList.Add(handle);
+                    continue;
+                }
+
+                for(int i = 0;i< mapObjects.Count;i++)
+                {
+                    handle.Execute(mapObjects[i]);
+                }
             }
         }
     }
 
 
-    public void RegisterMapObject(MapObject mapObject)
+    public void RegisterMapObject<T>(MapObject mapObject)where T: RepresentHandle,new()
     {
-        AddMapObjectList.Add(mapObject);
+        string typeName = typeof(T).Name;
+
+        RepresentHandle handle;
+        if(!HandleInstanceDict.TryGetValue(typeName,out handle))
+        {
+            handle = new T();
+            HandleInstanceDict.Add(typeName, handle);
+        }
+
+        List<MapObject> mapObjects;
+        if(!HandleRegisterDict.TryGetValue(handle,out mapObjects))
+        {
+            mapObjects = new List<MapObject>();
+            HandleRegisterDict.Add(handle, mapObjects);
+        }
+        mapObjects.Add(mapObject);
+
+        if (!ExecuteList.Contains(handle))
+        {
+            AddMapObjectList.Add(handle);
+        }
+
+        List<RepresentHandle> handles;
+        if(!MapObjectRegisterDict.TryGetValue(mapObject,out handles))
+        {
+            handles = new List<RepresentHandle>();
+            MapObjectRegisterDict.Add(mapObject, handles);
+        }
+        handles.Add(handle);
+    }
+
+    public void UnRegisterMapObject<T>(MapObject mapObject) where T : RepresentHandle
+    {
+        string typeName = typeof(T).Name;
+
+        RepresentHandle handle;
+        if (!HandleInstanceDict.TryGetValue(typeName, out handle))
+        {
+            return;
+        }
+
+        List<MapObject> mapObjects;
+        if (HandleRegisterDict.TryGetValue(handle, out mapObjects))
+        {
+            mapObjects.Remove(mapObject);
+        }
+
+        if (mapObjects.Count == 0)
+        {
+            DeleteMapObjectList.Add(handle);
+        }
+
+        List<RepresentHandle> handles;
+        if (MapObjectRegisterDict.TryGetValue(mapObject, out handles))
+        {
+            handles.Remove(handle);
+            if(handles.Count == 0)
+            {
+                MapObjectRegisterDict.Remove(mapObject);
+            }
+        }
+    }
+
+    public void MapObjectUnRegisterAll(MapObject mapObject)
+    {
+        List<RepresentHandle> handles;
+        if (MapObjectRegisterDict.TryGetValue(mapObject, out handles))
+        {
+            for(int index = 0;index<handles.Count;index++)
+            {
+                RepresentHandle handle = handles[index];
+
+                List<MapObject> mapObjects;
+                if (HandleRegisterDict.TryGetValue(handle, out mapObjects))
+                {
+                    mapObjects.Remove(mapObject);
+                }
+
+                if (mapObjects.Count == 0)
+                {
+                    DeleteMapObjectList.Add(handle);
+                }
+            }
+
+            MapObjectRegisterDict.Remove(mapObject);
+        }
     }
 
 
-    private void Move(MapObject mapObject)
-    {
-        MapOjectAttribute attribute = mapObject.GetAttribute<MapOjectAttribute>();
-        MapObjectArtAttribute art = mapObject.GetAttribute<MapObjectArtAttribute>();
 
-        if (attribute == null || art == null)
-        {
-            return;
-        }
-
-        if(art.transform == null)
-        {
-            return;
-        }
-
-        Vector3 transformPos = art.transform.position;
-        Vector3 distance = attribute.Position - transformPos;
-
-        float speed = 0.001f;
-
-        if (distance.x > 0.01 || distance.x< -0.01)
-        {
-            distance.x = speed * Time.deltaTime * (distance.x > 0 ? 1 : -1);
-        }
-        if (distance.y > 0.01 && distance.y < -0.01)
-        {
-            distance.y = speed * Time.deltaTime * (distance.y > 0 ? 1 : -1);
-        }
-
-        art.transform.position += distance;
-    }
-
-    private void Death(MapObject mapObject)
-    {
-        MapOjectAttribute attribute = mapObject.GetAttribute<MapOjectAttribute>();
-        MapObjectArtAttribute art = mapObject.GetAttribute<MapObjectArtAttribute>();
-
-        if (attribute == null || art == null)
-        {
-            return;
-        }
-
-        if(attribute.Hp != 0)
-        {
-            return;
-        }
-
-        GlobalEnvironment.Instance.Get<MapObjectManager>().RemoveMapObject(attribute.Id);
-        DeleteMapObjectList.Add(mapObject);
-    }
 }

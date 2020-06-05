@@ -2,19 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IAttribute
-{ }
-
 public class MapOjectAttribute : IAttribute
 {
     public int Id;
     public Vector3 Position;
     public int Hp;
-}
 
-public class MapObjectArtAttribute : IAttribute
-{
-    public GameObject gameObject;
-    public Transform transform;
-}
+    public void Init()
+    {
+        Id = 0;
+        Position = Vector3.zero;
+        Hp = 5;
+    }
 
+    public void UnInit()
+    {
+
+    }
+}

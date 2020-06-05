@@ -15,6 +15,13 @@ public static class GameDefine
         public const string Bullet = "Art/Model/Prefab/Bullet";
     }
 
+    public static class Layer
+    {
+        public const string Plant = "Plant";
+        public const string Zombie = "Zombie";
+        public const string Wall = "Wall";
+    }
+
     public static class Art
     {
         public static Vector3 GardenCellSize = new Vector3(10, 10,0);

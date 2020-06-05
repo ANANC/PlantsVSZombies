@@ -19,17 +19,29 @@ public class BulletMoveDailyAction : DailyAction
         continueMove.LogicBehavior = moveBehavior;
         behaviorTree.AddBehavior<ContinueBehavior>("move", continueMove, BehaviorTree.NodeType.ParallelOr);
 
-        ContinueBehavior continueTouch = new ContinueBehavior(-1);
-        TouchBehavior touchBehavior = new TouchBehavior();
-        TouchBehavior.TouchBehaviorInfo touchBehaviorInfo = new TouchBehavior.TouchBehaviorInfo();
-        touchBehaviorInfo.dir = Vector3.right;
-        touchBehaviorInfo.distance = 1;
-        touchBehaviorInfo.layerMask = -1;
-        touchBehaviorInfo.follow = mapObject.GetAttribute<MapObjectArtAttribute>().transform;
-        touchBehavior.Enviorment = touchBehaviorInfo;
-        touchBehavior.Node = continueTouch;
-        continueTouch.LogicBehavior = touchBehavior;
-        behaviorTree.AddBehavior<ContinueBehavior>("touch", continueTouch, BehaviorTree.NodeType.Serial);
+        ContinueBehavior continueTouchZombie = new ContinueBehavior(-1);
+        TouchZombieBehavior touchZombieBehavior = new TouchZombieBehavior();
+        TouchZombieBehavior.TouchBehaviorInfo touchZombieInfo = new TouchZombieBehavior.TouchBehaviorInfo();
+        touchZombieInfo.dir = Vector3.right;
+        touchZombieInfo.distance = 1f;
+        touchZombieInfo.mapObject = mapObject;
+        touchZombieInfo.Hurt = 1;
+        touchZombieBehavior.Enviorment = touchZombieInfo;
+        touchZombieBehavior.Node = continueTouchZombie;
+        continueTouchZombie.LogicBehavior = touchZombieBehavior;
+        behaviorTree.AddBehavior<ContinueBehavior>("TouchZombie", continueTouchZombie, BehaviorTree.NodeType.ParallelOr);
+
+
+        ContinueBehavior continueTouchWall = new ContinueBehavior(-1);
+        TouchWallBehavior touchWallBehavior = new TouchWallBehavior();
+        TouchWallBehavior.TouchBehaviorInfo touchWallInfo = new TouchWallBehavior.TouchBehaviorInfo();
+        touchWallInfo.dir = Vector3.right;
+        touchWallInfo.distance = 1f;
+        touchWallInfo.mapObject = mapObject;
+        touchWallBehavior.Enviorment = touchWallInfo;
+        touchWallBehavior.Node = continueTouchWall;
+        continueTouchWall.LogicBehavior = touchWallBehavior;
+        behaviorTree.AddBehavior<ContinueBehavior>("touchWall", continueTouchWall, BehaviorTree.NodeType.Serial);
 
 
         return behaviorTree;

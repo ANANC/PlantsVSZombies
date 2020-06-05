@@ -33,11 +33,13 @@ public class MapObjectManager:IManager
     public MapObject InstanceMapObject()
     {
         MapObject mapObject = CreateMapObject();
+
         mapObject.GetAttribute<MapOjectAttribute>().Id = AutoId;
-        AutoId += 1;
 
         MapObjectList.Add(mapObject);
         MapObjectDict.Add(AutoId, mapObject);
+
+        AutoId += 1;
 
         return mapObject;
     }
@@ -45,6 +47,8 @@ public class MapObjectManager:IManager
     private MapObject CreateMapObject()
     {
         MapObject mapObject = new MapObject();
+        mapObject.Init();
+
         IAttribute[] attributes = new IAttribute[]
         {
             new MapOjectAttribute(),
@@ -60,11 +64,16 @@ public class MapObjectManager:IManager
         return mapObject;
     }
 
-    public void RemoveMapObject(int id)
+    public void DeleteMapObject(int id)
     {
         MapObject mapObject;
         if (MapObjectDict.TryGetValue(id, out mapObject))
         {
+            mapObject.UnInit();
+
+            GlobalEnvironment.Instance.Get<RepresentManager>().MapObjectUnRegisterAll(mapObject);
+            GlobalEnvironment.Instance.Get<DailyManager>().MapObjectUnReigisterAll(mapObject);
+
             MapObjectDict.Remove(id);
             MapObjectList.Remove(mapObject);
         }
@@ -80,4 +89,25 @@ public class MapObjectManager:IManager
         return null;
     }
 
+
+    public MapObject GetMapObject(Transform transform)
+    {
+        MapObject mapObject;
+        MapObjectArtAttribute mapObjectArtAttribute;
+        for(int index = 0;index < MapObjectList.Count;index++)
+        {
+            mapObject = MapObjectList[index];
+            mapObjectArtAttribute = mapObject.GetAttribute<MapObjectArtAttribute>();
+            if(mapObjectArtAttribute == null || mapObjectArtAttribute.transform == null)
+            {
+                continue;
+            }
+            if(mapObjectArtAttribute.transform == transform)
+            {
+                return mapObject;
+            }
+        }
+
+        return null;
+    }
 }
