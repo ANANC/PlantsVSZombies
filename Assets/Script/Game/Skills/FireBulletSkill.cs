@@ -10,7 +10,7 @@ public class FireBulletSkill : Skill
 
         CreateFireBulletBehavior createMapObjectBehavior = new CreateFireBulletBehavior();
         CreateFireBulletBehavior.CreateFireBulletInfo createBehaviorInfo = new CreateFireBulletBehavior.CreateFireBulletInfo();
-        createBehaviorInfo.Position = mapObject.GetAttribute<MapOjectAttribute>().Position + new Vector3(0, 2, 0);
+        createBehaviorInfo.Position = mapObject.GetAttribute<MapOjectAttribute>().Position + new Vector3(0, 0, 0);
         createBehaviorInfo.ResourcePath = GameDefine.Path.Bullet;
         createMapObjectBehavior.Enviorment = createBehaviorInfo;
         SingleNodeBehavior singleBehavior = new SingleNodeBehavior();

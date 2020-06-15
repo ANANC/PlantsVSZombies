@@ -3,22 +3,27 @@ using UnityEditor;
 
 public class TouchZombieBehavior : LogicBehavior
 {
-    public class TouchBehaviorInfo : LogicBehaviorInfo
+    public class TouchZombieBehaviorInfo : LogicBehaviorInfo
     {
         public MapObject mapObject;
         public Vector3 dir;
         public float distance;
-        public int Hurt;
     }
+
+    public class TouchZombieBehaviorEnvironmentInfo : IBehaviorEnvironmentInfo
+    {
+        public MapObject Zombie;
+    }
+
 
     private Transform follow;
     private RaycastHit hitInfo;
     private int layerMask;
-    private TouchBehaviorInfo Info;
+    private TouchZombieBehaviorInfo Info;
 
     public override void Enter()
     {
-        Info = (TouchBehaviorInfo)Enviorment;
+        Info = (TouchZombieBehaviorInfo)Enviorment;
         layerMask = 1 << LayerMask.NameToLayer(GameDefine.Layer.Zombie);
         follow = Info.mapObject.GetAttribute<MapObjectArtAttribute>().transform;
     }
@@ -32,13 +37,13 @@ public class TouchZombieBehavior : LogicBehavior
             Node.Complete = true;
 
             Transform touch = hitInfo.collider.transform;
-
-            Info.mapObject.GetAttribute<MapOjectAttribute>().Hp = 0;
-
             MapObject zombie = GlobalEnvironment.Instance.Get<MapObjectManager>().GetMapObject(touch);
+
             if (zombie != null)
             {
-                zombie.GetAttribute<MapOjectAttribute>().Hp -= Info.Hurt;
+                TouchZombieBehaviorEnvironmentInfo touchZombieBehaviorEnvironmentInfo = new TouchZombieBehaviorEnvironmentInfo();
+                touchZombieBehaviorEnvironmentInfo.Zombie = zombie;
+                Node.BehaviorTree.Environment.Add<TouchZombieBehaviorEnvironmentInfo>(touchZombieBehaviorEnvironmentInfo);
             }
 
         }

@@ -43,13 +43,22 @@ public class BattleGameScene : GameScene
 
     public void InitBattleEnvironment()
     {
-        MapObject shooter = CreatePlantToMap(GameDefine.Path.Plant, Vector3.zero);
-        //SkillMgr.UseSkill(new FireBulletSkill(), shooter);
+        CreateShooter(Vector3.zero);
 
-        CreateZombieToMap(GameDefine.Path.Zombie, new Vector3(4, 0, 0));
+        CreateZombieToMap(GameDefine.Path.Zombie, new Vector3(GardenMap.GardenWidth+1, 0, 0));
        
     }
 
+    public void CreateShooter(Vector3 logicPos)
+    {
+        MapObject shooter = CreatePlantToMap(GameDefine.Path.Plant, logicPos);
+        if(shooter == null)
+        {
+            return;
+        }
+
+        DailyMgr.RegisterDailyAction(shooter, new TriggerShooterDailyAction());
+    }
 
     public MapObject CreatePlantToMap(string resPath, Vector3 logicPos)
     {

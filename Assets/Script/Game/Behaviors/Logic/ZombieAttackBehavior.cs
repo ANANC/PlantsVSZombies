@@ -41,10 +41,5 @@ public class ZombieAttackBehavior : LogicBehavior
             }
         }
 
-        if (Node.Complete == true)
-        {
-            DailyManager dailyManager = GlobalEnvironment.Instance.Get<DailyManager>();
-            dailyManager.RegisterDailyAction(Info.mapObject, new TriggerZombieMoveDailyAction());
-        }
     }
 }

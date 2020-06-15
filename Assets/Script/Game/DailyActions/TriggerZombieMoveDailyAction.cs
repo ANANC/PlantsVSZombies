@@ -9,9 +9,10 @@ public class TriggerZombieMoveDailyAction : DailyAction
         BehaviorTree behaviorTree = new BehaviorTree();
 
         SingleNodeBehavior singleNodeBehavior = new SingleNodeBehavior();
-        AddZombieMoveBehavior addZombieMoveBehavior = new AddZombieMoveBehavior();
-        AddZombieMoveBehavior.AddZombieMoveBehaviorInfo zombieMoveBehaviorInfo = new AddZombieMoveBehavior.AddZombieMoveBehaviorInfo();
+        AddDailyActionBehavior addZombieMoveBehavior = new AddDailyActionBehavior();
+        AddDailyActionBehavior.AddDailyActionBehaviorInfo zombieMoveBehaviorInfo = new AddDailyActionBehavior.AddDailyActionBehaviorInfo();
         zombieMoveBehaviorInfo.mapObject = mapObject;
+        zombieMoveBehaviorInfo.dailyAction = new ZombieMoveDailyAction();
         addZombieMoveBehavior.Enviorment = zombieMoveBehaviorInfo;
         singleNodeBehavior.AddBehavior(addZombieMoveBehavior);
         behaviorTree.AddBehavior("add", singleNodeBehavior, BehaviorTree.NodeType.Serial);

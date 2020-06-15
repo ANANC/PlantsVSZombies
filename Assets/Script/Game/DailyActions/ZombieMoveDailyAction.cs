@@ -11,7 +11,7 @@ public class ZombieMoveDailyAction : DailyAction
         ContinueBehavior continueMove = new ContinueBehavior(-1);
         MoveBehavior moveBehavior = new MoveBehavior();
         MoveBehavior.MoveBehaviorInfo moveBehaviorInfo = new MoveBehavior.MoveBehaviorInfo();
-        moveBehaviorInfo.speed = 1;
+        moveBehaviorInfo.speed = 0.5f;
         moveBehaviorInfo.dir = Vector3.left;
         moveBehaviorInfo.targer = mapObject;
         moveBehavior.Enviorment = moveBehaviorInfo;
@@ -41,14 +41,25 @@ public class ZombieMoveDailyAction : DailyAction
         behaviorTree.AddBehavior("TouchPlant", continueTouchZombie, BehaviorTree.NodeType.Serial);
 
 
-        IntervalBehavior intervalBehavior = new IntervalBehavior(2, -1);
+        IntervalBehavior intervalBehavior = new IntervalBehavior(10, -1);
         ZombieAttackBehavior zombieAttackBehavior = new ZombieAttackBehavior();
         ZombieAttackBehavior.ZombieAttackBehaviorInfo zombieAttackInfo = new ZombieAttackBehavior.ZombieAttackBehaviorInfo();
         zombieAttackInfo.mapObject = mapObject;
-        zombieAttackInfo.Attack = 2;
+        zombieAttackInfo.Attack = 1;
         zombieAttackBehavior.Enviorment = zombieAttackInfo;
         intervalBehavior.AddBehavior(zombieAttackBehavior);
         behaviorTree.AddBehavior("attack", intervalBehavior, BehaviorTree.NodeType.Serial);
+
+
+        SingleNodeBehavior singleNodeBehavior = new SingleNodeBehavior();
+        AddDailyActionBehavior addDailyActionBehavior = new AddDailyActionBehavior();
+        AddDailyActionBehavior.AddDailyActionBehaviorInfo addDailyActionBehaviorInfo = new AddDailyActionBehavior.AddDailyActionBehaviorInfo();
+        addDailyActionBehaviorInfo.mapObject = mapObject;
+        addDailyActionBehaviorInfo.dailyAction = new TriggerZombieMoveDailyAction();
+        addDailyActionBehavior.Enviorment = addDailyActionBehaviorInfo;
+        singleNodeBehavior.AddBehavior(addDailyActionBehavior);
+        behaviorTree.AddBehavior("daily", singleNodeBehavior, BehaviorTree.NodeType.Serial);
+
 
         return behaviorTree;
     }

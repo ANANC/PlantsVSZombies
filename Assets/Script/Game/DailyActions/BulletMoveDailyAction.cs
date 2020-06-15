@@ -20,11 +20,10 @@ public class BulletMoveDailyAction : DailyAction
 
         ContinueBehavior continueTouchZombie = new ContinueBehavior(-1);
         TouchZombieBehavior touchZombieBehavior = new TouchZombieBehavior();
-        TouchZombieBehavior.TouchBehaviorInfo touchZombieInfo = new TouchZombieBehavior.TouchBehaviorInfo();
+        TouchZombieBehavior.TouchZombieBehaviorInfo touchZombieInfo = new TouchZombieBehavior.TouchZombieBehaviorInfo();
         touchZombieInfo.dir = Vector3.right;
         touchZombieInfo.distance = 1f;
         touchZombieInfo.mapObject = mapObject;
-        touchZombieInfo.Hurt = 1;
         touchZombieBehavior.Enviorment = touchZombieInfo;
         continueTouchZombie.AddBehavior(touchZombieBehavior);
         behaviorTree.AddBehavior("TouchZombie", continueTouchZombie, BehaviorTree.NodeType.ParallelOr);
@@ -39,6 +38,14 @@ public class BulletMoveDailyAction : DailyAction
         touchWallBehavior.Enviorment = touchWallInfo;
         continueTouchWall.AddBehavior(touchWallBehavior);
         behaviorTree.AddBehavior("touchWall", continueTouchWall, BehaviorTree.NodeType.Serial);
+
+        SingleNodeBehavior singleNodeBehavior = new SingleNodeBehavior();
+        BulletAttackBehavior plantAttackBehavior = new BulletAttackBehavior();
+        BulletAttackBehavior.BulletAttackBehaviorInfo plantAttackBehaviorInfo = new BulletAttackBehavior.BulletAttackBehaviorInfo();
+        plantAttackBehaviorInfo.Attack = 1;
+        plantAttackBehavior.Enviorment = plantAttackBehaviorInfo;
+        singleNodeBehavior.AddBehavior(plantAttackBehavior);
+        behaviorTree.AddBehavior("attack", singleNodeBehavior, BehaviorTree.NodeType.Serial);
 
 
         return behaviorTree;

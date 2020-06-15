@@ -57,7 +57,7 @@ public class SkillManager : IManager
         }
     }
 
-    public void UseSkill(Skill skill,MapObject mapObject)
+    public void UseSkill(MapObject mapObject,Skill skill)
     {
         skill.mapObject = mapObject;
         AddSkillList.Add(skill);
