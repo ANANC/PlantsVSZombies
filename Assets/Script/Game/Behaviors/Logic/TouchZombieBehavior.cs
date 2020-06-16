@@ -30,6 +30,8 @@ public class TouchZombieBehavior : LogicBehavior
 
     public override void Execute()
     {
+        Debug.DrawLine(follow.position, follow.position + Info.dir * Info.distance,Color.blue);
+
         if (Physics.Raycast(follow.position, Info.dir, out hitInfo, Info.distance, layerMask))
         {
             Debug.Log("Touch Zombie!");

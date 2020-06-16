@@ -11,7 +11,7 @@ public class ZombieMoveDailyAction : DailyAction
         ContinueBehavior continueMove = new ContinueBehavior(-1);
         MoveBehavior moveBehavior = new MoveBehavior();
         MoveBehavior.MoveBehaviorInfo moveBehaviorInfo = new MoveBehavior.MoveBehaviorInfo();
-        moveBehaviorInfo.speed = 0.5f;
+        moveBehaviorInfo.speed = 1f;
         moveBehaviorInfo.dir = Vector3.left;
         moveBehaviorInfo.targer = mapObject;
         moveBehavior.Enviorment = moveBehaviorInfo;
@@ -41,7 +41,7 @@ public class ZombieMoveDailyAction : DailyAction
         behaviorTree.AddBehavior("TouchPlant", continueTouchZombie, BehaviorTree.NodeType.Serial);
 
 
-        IntervalBehavior intervalBehavior = new IntervalBehavior(10, -1);
+        IntervalBehavior intervalBehavior = new IntervalBehavior(5, -1);
         ZombieAttackBehavior zombieAttackBehavior = new ZombieAttackBehavior();
         ZombieAttackBehavior.ZombieAttackBehaviorInfo zombieAttackInfo = new ZombieAttackBehavior.ZombieAttackBehaviorInfo();
         zombieAttackInfo.mapObject = mapObject;

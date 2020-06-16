@@ -31,7 +31,7 @@ public class TouchPlantBehavior : LogicBehavior
 
     public override void Execute()
     {
-        Debug.DrawLine(follow.position, follow.position + Info.dir * Info.distance);
+        Debug.DrawLine(follow.position, follow.position + Info.dir * Info.distance,Color.red);
 
         if (Physics.Raycast(follow.position, Info.dir, out hitInfo, Info.distance, layerMask))
         {

@@ -27,5 +27,7 @@ public static class GameDefine
     {
         public static Vector3 GardenCellSize = new Vector3(10, 10,0);
     }
+
+    public const int FrameValue = 30;
 }
  

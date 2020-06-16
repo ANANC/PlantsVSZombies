@@ -20,6 +20,13 @@ public class IntervalBehavior : NodeBehavior
     {
         CurTime = 0;
         CurIntervalTimer = 0;
+
+        IntervalTime *= GameDefine.FrameValue;
+        if(FinishTime != -1)
+        {
+            FinishTime *= GameDefine.FrameValue;
+        }
+
         EnterLogics();
     }
 

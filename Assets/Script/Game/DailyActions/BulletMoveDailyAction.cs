@@ -43,6 +43,7 @@ public class BulletMoveDailyAction : DailyAction
         BulletAttackBehavior plantAttackBehavior = new BulletAttackBehavior();
         BulletAttackBehavior.BulletAttackBehaviorInfo plantAttackBehaviorInfo = new BulletAttackBehavior.BulletAttackBehaviorInfo();
         plantAttackBehaviorInfo.Attack = 1;
+        plantAttackBehaviorInfo.mapObject = mapObject;
         plantAttackBehavior.Enviorment = plantAttackBehaviorInfo;
         singleNodeBehavior.AddBehavior(plantAttackBehavior);
         behaviorTree.AddBehavior("attack", singleNodeBehavior, BehaviorTree.NodeType.Serial);

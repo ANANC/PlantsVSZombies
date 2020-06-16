@@ -45,7 +45,7 @@ public class BattleGameScene : GameScene
     {
         CreateShooter(Vector3.zero);
 
-        CreateZombieToMap(GameDefine.Path.Zombie, new Vector3(GardenMap.GardenWidth+1, 0, 0));
+        CreateZombieToMap(GameDefine.Path.Zombie, new Vector3(GardenMap.GardenWidth+0.2f, 0, 0));
        
     }
 

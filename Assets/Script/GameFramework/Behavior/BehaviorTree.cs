@@ -89,7 +89,7 @@ public class BehaviorTree
 
         public T Get<T>() where T : IBehaviorEnvironmentInfo
         {
-            if(BehaviorEnvironmentInfoDict == null)
+            if (BehaviorEnvironmentInfoDict == null)
             {
                 return default(T);
             }
@@ -113,7 +113,7 @@ public class BehaviorTree
     private int AutoId = 0;
 
 
-    public void AddBehavior(string name, NodeBehavior behavior, NodeType nodeType) 
+    public void AddBehavior(string name, NodeBehavior behavior, NodeType nodeType)
     {
         Node node = new Node();
         node.Name = name;
@@ -186,7 +186,7 @@ public class BehaviorTree
                     }
                     if (findIndex != -1)
                     {
-                        BehaviorList.RemoveRange(0, findIndex);
+                        BehaviorList.RemoveRange(0, findIndex + 1);
                         break;
                     }
                 }
@@ -202,7 +202,7 @@ public class BehaviorTree
             }
             else if (NodeFinish)
             {
-                BehaviorList.RemoveRange(0, nodeIndex);
+                BehaviorList.RemoveRange(0, nodeIndex + 1);
                 nodeIndex = 0;
             }
         }
