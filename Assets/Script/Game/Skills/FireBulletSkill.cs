@@ -11,7 +11,6 @@ public class FireBulletSkill : Skill
         CreateFireBulletBehavior createMapObjectBehavior = new CreateFireBulletBehavior();
         CreateFireBulletBehavior.CreateFireBulletInfo createBehaviorInfo = new CreateFireBulletBehavior.CreateFireBulletInfo();
         createBehaviorInfo.Position = mapObject.GetAttribute<MapOjectAttribute>().Position + new Vector3(0, 0, 0);
-        createBehaviorInfo.ResourcePath = GameDefine.Path.Bullet;
         createMapObjectBehavior.Enviorment = createBehaviorInfo;
         SingleNodeBehavior singleBehavior = new SingleNodeBehavior();
         singleBehavior.AddBehavior(createMapObjectBehavior);
@@ -26,7 +25,6 @@ public class CreateFireBulletBehavior : LogicBehavior
 {
     public class CreateFireBulletInfo : LogicBehaviorInfo
     {
-        public string ResourcePath;
         public Vector3 Position;
     }
 
@@ -39,21 +37,7 @@ public class CreateFireBulletBehavior : LogicBehavior
 
     public override void Execute()
     {
-        MapObject mapObject = GlobalEnvironment.Instance.Get<MapObjectManager>().InstanceMapObject();
-
-        MapObjectArtAttribute mapObjectArtAttribute = mapObject.GetAttribute<MapObjectArtAttribute>();
-        GameObject gameObject = GlobalEnvironment.Instance.Get<ResourceManager>().Instance(Info.ResourcePath);
-        mapObjectArtAttribute.gameObject = gameObject;
-        mapObjectArtAttribute.transform = gameObject.transform;
-
-        MapOjectAttribute mapObjectAttribute = mapObject.GetAttribute<MapOjectAttribute>();
-        mapObjectAttribute.Position = Info.Position;
-
-        GlobalEnvironment.Instance.Get<DailyManager>().RegisterDailyAction(mapObject, new BulletMoveDailyAction());
-
-        GlobalEnvironment.Instance.Get<RepresentManager>().RegisterMapObject<MoveArtHandle>(mapObject);
-        GlobalEnvironment.Instance.Get<RepresentManager>().RegisterMapObject<DeathArtHandle>(mapObject);
-
+        GlobalEnvironment.Instance.Get<GameMapObjectManager>().CreateBullet(Info.Position);
     }
 
 }

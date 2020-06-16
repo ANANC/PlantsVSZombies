@@ -11,7 +11,7 @@ public class ZombieMoveDailyAction : DailyAction
         ContinueBehavior continueMove = new ContinueBehavior(-1);
         MoveBehavior moveBehavior = new MoveBehavior();
         MoveBehavior.MoveBehaviorInfo moveBehaviorInfo = new MoveBehavior.MoveBehaviorInfo();
-        moveBehaviorInfo.speed = 1f;
+        moveBehaviorInfo.speed = 0.5f;
         moveBehaviorInfo.dir = Vector3.left;
         moveBehaviorInfo.targer = mapObject;
         moveBehavior.Enviorment = moveBehaviorInfo;
@@ -23,7 +23,7 @@ public class ZombieMoveDailyAction : DailyAction
         TouchWallBehavior touchWallBehavior = new TouchWallBehavior();
         TouchWallBehavior.TouchBehaviorInfo touchWallInfo = new TouchWallBehavior.TouchBehaviorInfo();
         touchWallInfo.dir = Vector3.left;
-        touchWallInfo.distance = 1f;
+        touchWallInfo.distance = 1.6f;
         touchWallInfo.mapObject = mapObject;
         touchWallBehavior.Enviorment = touchWallInfo;
         continueTouchWall.AddBehavior(touchWallBehavior);
@@ -34,7 +34,7 @@ public class ZombieMoveDailyAction : DailyAction
         TouchPlantBehavior touchPlantBehavior = new TouchPlantBehavior();
         TouchPlantBehavior.TouchBehaviorInfo touchPlantInfo = new TouchPlantBehavior.TouchBehaviorInfo();
         touchPlantInfo.dir = Vector3.left;
-        touchPlantInfo.distance = 1f;
+        touchPlantInfo.distance = 1.6f;
         touchPlantInfo.mapObject = mapObject;
         touchPlantBehavior.Enviorment = touchPlantInfo;
         continueTouchZombie.AddBehavior(touchPlantBehavior);

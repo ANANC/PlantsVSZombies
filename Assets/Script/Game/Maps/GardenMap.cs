@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GardenMap : Map
+public class CellMap : Map
 {
-    public class GardenCell
+    public class Cell
     {
         public Vector3 Position;
         public bool Hold;
@@ -14,8 +14,9 @@ public class GardenMap : Map
     public const int GardenWidth = 2;
     public const int GardenHeight = 4;
 
+    private Transform GardenParent;
 
-    private Dictionary<Vector3, GardenCell> GardenCellDict;
+    private Dictionary<Vector3, Cell> GardenCellDict;
 
     public override void Enter()
     {
@@ -28,24 +29,31 @@ public class GardenMap : Map
 
     private void InitGardenEnviorment()
     {
-        GardenCellDict = new Dictionary<Vector3, GardenCell>();
+        GardenParent = new GameObject("Garden").transform;
+
+           GardenCellDict = new Dictionary<Vector3, Cell>();
         for (int h = 0; h < GardenHeight; h++)
         {
             for (int w = 0; w < GardenWidth; w++)
             {
-                GardenCell cell = new GardenCell();
+                Cell cell = new Cell();
                 Vector3 position = new Vector3(w, h, 0);
                 cell.Position = position;
                 cell.Hold = false;
                 cell.MapObjectIds = null;
+
+                GameObject gameObject = GlobalEnvironment.Instance.Get<ResourceManager>().Instance(GameDefine.Path.Lawn);
+                gameObject.transform.position = new Vector3(w * GameDefine.Art.GardenCellSize.x, h * GameDefine.Art.GardenCellSize.y, 0);
+                gameObject.transform.SetParent(GardenParent);
+
                 GardenCellDict.Add(position, cell);
             }
         }
     }
 
-    public GardenCell GetGardenCell(Vector3 position)
+    public Cell GetGardenCell(Vector3 position)
     {
-        GardenCell cell;
+        Cell cell;
         if (GardenCellDict.TryGetValue(position, out cell))
         {
             return cell;
@@ -55,7 +63,7 @@ public class GardenMap : Map
 
     public bool IsCanCreateMapObjectToMap(Vector3 position)
     {
-        GardenCell cell = GetGardenCell(position);
+        Cell cell = GetGardenCell(position);
         if (cell == null)
         {
             return false;
@@ -74,7 +82,7 @@ public class GardenMap : Map
 
     public void AddMapObjectToMap(int mapObjectId, Vector3 position)
     {
-        GardenCell cell = GetGardenCell(position);
+        Cell cell = GetGardenCell(position);
         if (cell == null)
         {
             return;

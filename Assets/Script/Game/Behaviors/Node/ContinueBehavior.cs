@@ -4,23 +4,18 @@ using UnityEditor;
 public class ContinueBehavior : NodeBehavior
 {
     private float CurTime;
-    private float CurIntervalTimer;
 
-    private float IntervalTime;
     private float FinishTime;
 
-    public ContinueBehavior(float finishTime)
+    public ContinueBehavior(float frameValue)
     {
-        IntervalTime = Time.deltaTime * GameDefine.FrameValue;
-        FinishTime = finishTime;
+        FinishTime = frameValue;
     }
 
     public override void Enter()
     {
         CurTime = 0;
-        CurIntervalTimer = 0;
 
-        IntervalTime *= GameDefine.FrameValue;
         if (FinishTime != -1)
         {
             FinishTime *= GameDefine.FrameValue;
@@ -41,11 +36,6 @@ public class ContinueBehavior : NodeBehavior
             Complete = CurTime > FinishTime;
         }
 
-        CurIntervalTimer += Time.deltaTime;
-        if (CurIntervalTimer >= IntervalTime)
-        {
-            CurIntervalTimer = 0;
-            ExecuteLogics();
-        }
+        ExecuteLogics();
     }
 }

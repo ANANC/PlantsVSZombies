@@ -26,15 +26,14 @@ public class MoveArtHandle : RepresentHandle
         Vector3 transformPos = art.transform.position;
         Vector3 distance = attribute.Position - transformPos;
 
-        float speed = 0.1f;
-
-        if (distance.x > 0.01 || distance.x < -0.01)
+        if (distance.x > art.MaxSpeed || distance.x < -art.MaxSpeed)
         {
-            distance.x = speed * Time.deltaTime * (distance.x > 0 ? 1 : -1);
+            distance.x = art.MaxSpeed * Time.deltaTime * (distance.x > 0 ? 1 : -1);
         }
-        if (distance.y > 0.01 && distance.y < -0.01)
+
+        if (distance.y > art.MaxSpeed && distance.y < -art.MaxSpeed)
         {
-            distance.y = speed * Time.deltaTime * (distance.y > 0 ? 1 : -1);
+            distance.y = art.MaxSpeed * Time.deltaTime * (distance.y > 0 ? 1 : -1);
         }
 
         art.transform.position += distance;

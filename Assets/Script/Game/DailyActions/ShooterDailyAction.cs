@@ -10,11 +10,11 @@ public class ShooterDailyAction : DailyAction
 
         MapOjectAttribute mapOjectAttribute = mapObject.GetAttribute<MapOjectAttribute>();
 
-        IntervalBehavior intervalBehavior = new IntervalBehavior(2, -1);
+        IntervalBehavior intervalBehavior = new IntervalBehavior(3, -1);
         TouchZombieBehavior touchZombieBehavior = new TouchZombieBehavior();
         TouchZombieBehavior.TouchZombieBehaviorInfo touchZombieInfo = new TouchZombieBehavior.TouchZombieBehaviorInfo();
         touchZombieInfo.dir = Vector3.right;
-        touchZombieInfo.distance = GameDefine.Art.GardenCellSize.y * (GardenMap.GardenWidth - mapOjectAttribute.Position.y);
+        touchZombieInfo.distance = GameDefine.Art.GardenCellSize.y * (CellMap.GardenWidth - mapOjectAttribute.Position.y+0.8f);
         touchZombieInfo.mapObject = mapObject;
         touchZombieBehavior.Enviorment = touchZombieInfo;
         intervalBehavior.AddBehavior(touchZombieBehavior);

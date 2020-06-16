@@ -6,6 +6,7 @@ public class MapObjectArtAttribute : IAttribute
 {
     public GameObject gameObject;
     public Transform transform;
+    public float MaxSpeed;
 
     public void Init()
     {

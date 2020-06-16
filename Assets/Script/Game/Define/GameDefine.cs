@@ -11,9 +11,10 @@ public static class GameDefine
 
     public static class Path
     {
-        public const string Plant = "Art/Model/Prefab/Plant";
+        public const string Shooter = "Art/Model/Prefab/Shooter";
         public const string Bullet = "Art/Model/Prefab/Bullet";
         public const string Zombie = "Art/Model/Prefab/Zombie";
+        public const string Lawn = "Art/Model/Prefab/Lawn";
     }
 
     public static class Layer
