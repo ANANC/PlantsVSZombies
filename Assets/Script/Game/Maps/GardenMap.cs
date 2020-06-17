@@ -11,7 +11,7 @@ public class CellMap : Map
         public List<int> MapObjectIds;
     }
 
-    public const int GardenWidth = 2;
+    public const int GardenWidth = 5;
     public const int GardenHeight = 4;
 
     private Transform GardenParent;

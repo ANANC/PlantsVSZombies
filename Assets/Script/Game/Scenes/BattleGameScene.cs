@@ -33,14 +33,21 @@ public class BattleGameScene : GameScene
         GamePlay.Exist();
     }
 
+    public override void Update()
+    {
+        GamePlay.Update();
+    }
+
     public void InitBattleEnvironment()
     {
         GameMapObjectMgr.CreateShooter(Vector3.zero);
+        GameMapObjectMgr.CreateShooter(Vector3.one);
+        GameMapObjectMgr.CreateShooter(new Vector3(2, 1));
+        GameMapObjectMgr.CreateShooter(new Vector3(2, 3));
+        GameMapObjectMgr.CreateShooter(new Vector3(3, 0));
+        GameMapObjectMgr.CreateShooter(new Vector3(4, 2));
 
-        GameMapObjectMgr.CreateZombieToMap(GameDefine.Path.Zombie, new Vector3(CellMap.GardenWidth+0.2f, 0, 0));
-       
     }
 
-  
 
 }

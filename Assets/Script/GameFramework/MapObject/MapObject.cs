@@ -4,23 +4,32 @@ using UnityEngine;
 
 public class MapObject
 {
+    private bool Active;
+
     private List<IAttribute> AttributeList;
     private Dictionary<string, IAttribute> AttributeDict;
 
     public void Init()
     {
+        Active = true;
         AttributeList = new List<IAttribute>();
         AttributeDict = new Dictionary<string, IAttribute>();
     }
 
     public void UnInit()
     {
+        Active = false;
         for (int index = 0; index < AttributeList.Count; index++)
         {
             AttributeList[index].UnInit();
         }
         AttributeList.Clear();
         AttributeDict.Clear();
+    }
+
+    public bool IsActive()
+    {
+        return Active;
     }
 
     public void AddAttribute<T>(string key, T attribute) where T : IAttribute

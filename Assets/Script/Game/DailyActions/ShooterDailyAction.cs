@@ -14,7 +14,7 @@ public class ShooterDailyAction : DailyAction
         TouchZombieBehavior touchZombieBehavior = new TouchZombieBehavior();
         TouchZombieBehavior.TouchZombieBehaviorInfo touchZombieInfo = new TouchZombieBehavior.TouchZombieBehaviorInfo();
         touchZombieInfo.dir = Vector3.right;
-        touchZombieInfo.distance = GameDefine.Art.GardenCellSize.y * (CellMap.GardenWidth - mapOjectAttribute.Position.y+0.8f);
+        touchZombieInfo.distance = GameDefine.Art.GardenCellSize.x * (CellMap.GardenWidth - mapOjectAttribute.Position.x + 0.8f);
         touchZombieInfo.mapObject = mapObject;
         touchZombieBehavior.Enviorment = touchZombieInfo;
         intervalBehavior.AddBehavior(touchZombieBehavior);

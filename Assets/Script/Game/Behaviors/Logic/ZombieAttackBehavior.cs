@@ -27,7 +27,7 @@ public class ZombieAttackBehavior : LogicBehavior
 
     public override void Execute()
     {
-        if (Plant == null)
+        if (Plant == null || Plant.IsActive() == false)
         {
             Node.Complete = true;
         }

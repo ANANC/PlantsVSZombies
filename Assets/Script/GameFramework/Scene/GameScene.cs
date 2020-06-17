@@ -10,5 +10,7 @@ public abstract class GameScene
     public abstract void Enter();
 
     public abstract void Exist();
+
+    public abstract void Update();
 }
 

@@ -34,7 +34,10 @@ public class SceneManager : IManager
 
     public void Update()
     {
-
+        if (CurScene != null)
+        {
+            CurScene.Update();
+        }
     }
 
     public void Enter(string sceneKey)

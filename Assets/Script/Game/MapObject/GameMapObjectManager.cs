@@ -63,8 +63,7 @@ public class GameMapObjectManager : IManager
         MapObject mapObject = MapObjectMgr.InstanceMapObject();
         GardenMap.AddMapObjectToMap(mapObject.GetAttribute<MapOjectAttribute>().Id, logicPos);
         MapOjectAttribute mapOjectAttribute = mapObject.GetAttribute<MapOjectAttribute>();
-        Vector3 postion = new Vector3(logicPos.x * GameDefine.Art.GardenCellSize.x, logicPos.y * GameDefine.Art.GardenCellSize.y, 0);
-        mapOjectAttribute.Position = postion;
+        mapOjectAttribute.Position = logicPos;
         mapOjectAttribute.Hp = 5;
 
         // 表现
@@ -72,6 +71,7 @@ public class GameMapObjectManager : IManager
         MapObjectArtAttribute mapObjectArtAttribute = mapObject.GetAttribute<MapObjectArtAttribute>();
         mapObjectArtAttribute.gameObject = gameObject;
         mapObjectArtAttribute.transform = gameObject.transform;
+        Vector3 postion = new Vector3(logicPos.x * GameDefine.Art.GardenCellSize.x, logicPos.y * GameDefine.Art.GardenCellSize.y, 0);
         mapObjectArtAttribute.transform.localPosition = postion;
 
         RepresentMgr.RegisterMapObject<DeathArtHandle>(mapObject);
@@ -112,9 +112,11 @@ public class GameMapObjectManager : IManager
         GameObject gameObject = GlobalEnvironment.Instance.Get<ResourceManager>().Instance(GameDefine.Path.Bullet);
         mapObjectArtAttribute.gameObject = gameObject;
         mapObjectArtAttribute.transform = gameObject.transform;
+        mapObjectArtAttribute.transform.position = position;
         mapObjectArtAttribute.MaxSpeed = 0.1f;
 
         MapOjectAttribute mapObjectAttribute = mapObject.GetAttribute<MapOjectAttribute>();
+        mapObjectAttribute.Hp = 1;
         mapObjectAttribute.Position = position;
 
         GlobalEnvironment.Instance.Get<DailyManager>().RegisterDailyAction(mapObject, new BulletMoveDailyAction());
