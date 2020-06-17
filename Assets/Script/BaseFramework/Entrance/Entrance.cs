@@ -27,16 +27,20 @@ public class Entrance : MonoBehaviour
         GlobalEnvironment.Instance.AddManager<RepresentManager>(new RepresentManager());
         GlobalEnvironment.Instance.AddManager<SkillManager>(new SkillManager());
         GlobalEnvironment.Instance.AddManager<GameMapObjectManager>(new GameMapObjectManager());
-        
+
     }
 
     private void FormworkRegister()
     {
+        GlobalEnvironment.Instance.AddManager<UIManager>(new UIManager());
         GlobalEnvironment.Instance.AddManager<ResourceManager>(new ResourceManager());
     }
 
     private void StartGame()
     {
+        UIManager uiMgr = GlobalEnvironment.Instance.Get<UIManager>();
+        uiMgr.SetUIFolderPath("Art/UI/Prefab");
+
         SceneManager sceneManager = GlobalEnvironment.Instance.Get<SceneManager>();
         sceneManager.Enter(GameDefine.Scene.Battle);
     }

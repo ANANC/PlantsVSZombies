@@ -69,6 +69,6 @@ public class GardenBattleGamePlay : GamePlay
 
     private void CreateZombieToMap()
     {
-        GameMapObjectMgr.CreateZombieToMap(GameDefine.Path.Zombie, new Vector3(CellMap.GardenWidth + 0.2f,Random.Range(0, CellMap.GardenHeight), 0));
+        GameMapObjectMgr.CreateZombieToMap(GameDefine.Path.Zombie, new Vector3(GameDefine.Garden.GardenWidth + 0.2f,Random.Range(0, GameDefine.Garden.GardenHeight), 0));
     }
 }

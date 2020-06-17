@@ -11,11 +11,6 @@ public class CellMap : Map
         public List<int> MapObjectIds;
     }
 
-    public const int GardenWidth = 5;
-    public const int GardenHeight = 4;
-
-    private Transform GardenParent;
-
     private Dictionary<Vector3, Cell> GardenCellDict;
 
     public override void Enter()
@@ -29,22 +24,17 @@ public class CellMap : Map
 
     private void InitGardenEnviorment()
     {
-        GardenParent = new GameObject("Garden").transform;
+        GardenCellDict = new Dictionary<Vector3, Cell>();
 
-           GardenCellDict = new Dictionary<Vector3, Cell>();
-        for (int h = 0; h < GardenHeight; h++)
+        for (int h = 0; h < GameDefine.Garden.GardenWidth; h++)
         {
-            for (int w = 0; w < GardenWidth; w++)
+            for (int w = 0; w < GameDefine.Garden.GardenWidth; w++)
             {
                 Cell cell = new Cell();
                 Vector3 position = new Vector3(w, h, 0);
                 cell.Position = position;
                 cell.Hold = false;
                 cell.MapObjectIds = null;
-
-                GameObject gameObject = GlobalEnvironment.Instance.Get<ResourceManager>().Instance(GameDefine.Path.Lawn);
-                gameObject.transform.position = new Vector3(w * GameDefine.Art.GardenCellSize.x, h * GameDefine.Art.GardenCellSize.y, 0);
-                gameObject.transform.SetParent(GardenParent);
 
                 GardenCellDict.Add(position, cell);
             }
