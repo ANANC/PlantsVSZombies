@@ -36,7 +36,7 @@ public class UIManager : IManager
         UIFolderPath = path;
     }
 
-    private T _CreateUI<T>(string resourceName, Transform parent) where T : BaseUIObject, new()
+    private T _CreateUI<T>(string resourceName, string uiName,Transform parent) where T : BaseUIObject, new()
     {
         string path = string.Format("{0}/{1}", UIFolderPath, resourceName);
 
@@ -56,11 +56,10 @@ public class UIManager : IManager
         transform.localScale = Vector3.one;
         gameObject.name = resourceName;
 
-        string uiName = resourceName;
         if (m_UINameDict.ContainsKey(resourceName))
         {
-            m_UINameDict[uiName] += 1;
-            uiName += m_UINameDict[uiName];
+            m_UINameDict[resourceName] += 1;
+            uiName += m_UINameDict[resourceName];
         }else
         {
             m_UINameDict.Add(resourceName, 0);
@@ -92,7 +91,7 @@ public class UIManager : IManager
         }
         else
         {
-            ui = _CreateUI<T>(uiName, parent);
+            ui = _CreateUI<T>(uiName, uiName,parent);
             if (ui != null)
             {
                 ui.Init();
@@ -118,7 +117,7 @@ public class UIManager : IManager
             parent = parentUI.Transform;
         }
 
-        T ui = _CreateUI<T>(uiName, parent);
+        T ui = _CreateUI<T>(uiName, "sub_" + uiName, parent);
 
         if (ui != null)
         {

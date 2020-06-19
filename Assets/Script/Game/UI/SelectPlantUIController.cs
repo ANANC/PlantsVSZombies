@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class SelectPlantUIController : BaseUIObject
 {
-    public Transform ContentTransform;
-    public RectTransform ContentRectTransform;
+    public Transform BgTransform;
 
     public const int MaxCellCount = 4;
 
@@ -13,8 +12,7 @@ public class SelectPlantUIController : BaseUIObject
 
     public override void Init()
     {
-        ContentTransform = FindTransform("Bg/ScrollView/Viewport/Content");
-        ContentRectTransform = (RectTransform)ContentTransform;
+        BgTransform = FindTransform("Bg");
 
         CreateCellEnviorment();
     }
@@ -26,7 +24,7 @@ public class SelectPlantUIController : BaseUIObject
 
         for (int index = 0; index < MaxCellCount; index++)
         {
-            SelectPlantCellController cell = uimgr.OpenSubUI<SelectPlantCellController>(UIName, GameDefine.UIName.SelectPlantCell, ContentTransform);
+            SelectPlantCellController cell = uimgr.OpenSubUI<SelectPlantCellController>(UIName, GameDefine.UIName.SelectPlantCell, BgTransform);
             Cells.Add(cell);
         }
     }
