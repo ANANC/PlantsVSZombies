@@ -22,6 +22,7 @@ public static class GameDefine
         public const string Plant = "Plant";
         public const string Zombie = "Zombie";
         public const string Wall = "Wall";
+        public const string Bullet = "Bullet";
     }
 
     public static class Garden
