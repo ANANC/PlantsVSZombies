@@ -21,19 +21,19 @@ public class Entrance : MonoBehaviour
 
     private void GameRegister()
     {
-        GlobalEnvironment.Instance.AddManager<MapObjectManager>(new MapObjectManager());
-        GlobalEnvironment.Instance.AddManager<DailyManager>(new DailyManager());
-        GlobalEnvironment.Instance.AddManager<SceneManager>(new SceneManager());
-        GlobalEnvironment.Instance.AddManager<RepresentManager>(new RepresentManager());
-        GlobalEnvironment.Instance.AddManager<SkillManager>(new SkillManager());
-        GlobalEnvironment.Instance.AddManager<GameMapObjectManager>(new GameMapObjectManager());
-
+        GlobalEnvironment.Instance.AddManager(new MapObjectManager());
+        GlobalEnvironment.Instance.AddManager(new DailyManager());
+        GlobalEnvironment.Instance.AddManager(new SceneManager());
+        GlobalEnvironment.Instance.AddManager(new RepresentManager());
+        GlobalEnvironment.Instance.AddManager(new SkillManager());
+        GlobalEnvironment.Instance.AddManager(new GameMapObjectManager());
+        GlobalEnvironment.Instance.AddManager(new BuffManager());
     }
 
     private void FormworkRegister()
     {
-        GlobalEnvironment.Instance.AddManager<UIManager>(new UIManager());
-        GlobalEnvironment.Instance.AddManager<ResourceManager>(new ResourceManager());
+        GlobalEnvironment.Instance.AddManager(new UIManager());
+        GlobalEnvironment.Instance.AddManager(new ResourceManager());
     }
 
     private void StartGame()

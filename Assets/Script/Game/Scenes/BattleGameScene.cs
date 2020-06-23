@@ -69,7 +69,10 @@ public class BattleGameScene : GameScene
         GameMapObjectMgr.CreateShooter(new Vector3(2, 1));
         GameMapObjectMgr.CreateShooter(new Vector3(2, 3));
         GameMapObjectMgr.CreateShooter(new Vector3(3, 0));
-        GameMapObjectMgr.CreateShooter(new Vector3(4, 2));
+        GameMapObjectMgr.CreateShooter(new Vector3(0, 2));
+
+
+        GameMapObjectMgr.CreateTorchwood(new Vector3(1, 2));
 
     }
 

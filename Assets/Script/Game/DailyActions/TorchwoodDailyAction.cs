@@ -12,9 +12,7 @@ public class TorchwoodDailyAction : DailyAction
         TouchAttachObjectBehavior touchAttachObjectBehavior = new TouchAttachObjectBehavior();
         TouchAttachObjectBehavior.TouchBehaviorInfo touchBehaviorInfo = new TouchAttachObjectBehavior.TouchBehaviorInfo();
         touchBehaviorInfo.layerMask = 1 << LayerMask.NameToLayer(GameDefine.Layer.Bullet);
-        touchBehaviorInfo.dir = Vector3.zero;
-        touchBehaviorInfo.radius = 1;
-        touchBehaviorInfo.maxDistance = 1;
+        touchBehaviorInfo.distance = 1.8f;
         touchBehaviorInfo.mapObject = mapObject;
         touchAttachObjectBehavior.Enviorment = touchBehaviorInfo;
         continueBehavior.AddBehavior(touchAttachObjectBehavior);
@@ -28,7 +26,16 @@ public class TorchwoodDailyAction : DailyAction
         addAttachBehavior.Enviorment = addAttachBehaviorInfo;
         singleNodeBehavior.AddBehavior(addAttachBehavior);
 
+        AddDailyActionBehavior addDailyActionBehavior = new AddDailyActionBehavior();
+        AddDailyActionBehavior.AddDailyActionBehaviorInfo addDailyActionBehaviorInfo = new AddDailyActionBehavior.AddDailyActionBehaviorInfo();
+        addDailyActionBehaviorInfo.mapObject = mapObject;
+        addDailyActionBehaviorInfo.dailyAction = new TorchwoodDailyAction();
+        addDailyActionBehavior.Enviorment = addDailyActionBehaviorInfo;
+
+        singleNodeBehavior.AddBehavior(addDailyActionBehavior);
+
         behaviorTree.AddBehavior("addFire", singleNodeBehavior, BehaviorTree.NodeType.Serial);
+
 
         return behaviorTree;
     }

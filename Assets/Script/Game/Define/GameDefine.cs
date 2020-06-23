@@ -15,6 +15,7 @@ public static class GameDefine
         public const string Bullet = "Art/Model/Prefab/Bullet";
         public const string Zombie = "Art/Model/Prefab/Zombie";
         public const string Lawn = "Art/Model/Prefab/Lawn";
+        public const string Torchwood = "Art/Model/Prefab/Torchwood";
     }
 
     public static class Layer

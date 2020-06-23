@@ -81,7 +81,7 @@ public class GlobalEnvironment
         }
     }
 
-    public void AddManager<T>(T manager) where T : IManager
+    public void AddManager(IManager manager) 
     {
         manager.Init();
         ManagerDict.Add(manager.GetType().Name, manager);

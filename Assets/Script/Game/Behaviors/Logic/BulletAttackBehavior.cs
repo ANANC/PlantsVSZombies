@@ -28,13 +28,27 @@ public class BulletAttackBehavior : LogicBehavior
     {
         Node.Complete = true;
 
-        MapOjectAttribute bulletAttribute = Info.mapObject.GetAttribute<MapOjectAttribute>();
-
-        if (bulletAttribute.Hp != 0 && Zombie != null)
+        if (Zombie != null)
         {
-            MapOjectAttribute mapOjectAttribute = Zombie.GetAttribute<MapOjectAttribute>();
-            mapOjectAttribute.Hp -= Info.Attack;
+
+            MapOjectAttribute bulletAttribute = Info.mapObject.GetAttribute<MapOjectAttribute>();
+            if (bulletAttribute.Hp != 0)
+            {
+                MapOjectAttribute mapOjectAttribute = Zombie.GetAttribute<MapOjectAttribute>();
+                mapOjectAttribute.Hp -= Info.Attack;
+
+                bulletAttribute.Hp = 0;
+            }
+
+            AttachAttackAttribute attachAttackBuff = Info.mapObject.GetAttribute<AttachAttackAttribute>();
+            if (attachAttackBuff != null)
+            {
+                if(attachAttackBuff.Fire > 0)
+                {
+                    GlobalEnvironment.Instance.Get<BuffManager>().AddBuff(Zombie, new AttachAttackBuff());
+                }
+            }
         }
-        bulletAttribute.Hp = 0;
+
     }
 }

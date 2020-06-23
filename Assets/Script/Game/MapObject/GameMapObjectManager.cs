@@ -52,6 +52,19 @@ public class GameMapObjectManager : IManager
         return shooter;
     }
 
+    public MapObject CreateTorchwood(Vector3 logicPos)
+    {
+        MapObject torchwood = CreatePlantToMap(GameDefine.Path.Torchwood, logicPos);
+        if (torchwood == null)
+        {
+            return null;
+        }
+
+        DailyMgr.RegisterDailyAction(torchwood, new TorchwoodDailyAction());
+
+        return torchwood;
+    }
+
     public MapObject CreatePlantToMap(string resPath, Vector3 logicPos)
     {
         if (!GardenMap.IsCanCreateMapObjectToMap(logicPos))
@@ -122,7 +135,8 @@ public class GameMapObjectManager : IManager
         GlobalEnvironment.Instance.Get<DailyManager>().RegisterDailyAction(mapObject, new BulletMoveDailyAction());
 
         GlobalEnvironment.Instance.Get<RepresentManager>().RegisterMapObject<MoveArtHandle>(mapObject);
-        GlobalEnvironment.Instance.Get<RepresentManager>().RegisterMapObject<DeathArtHandle>(mapObject);
+        GlobalEnvironment.Instance.Get<RepresentManager>().RegisterMapObject<DeathArtHandle>(mapObject); 
+        GlobalEnvironment.Instance.Get<RepresentManager>().RegisterMapObject<AttachArtHandle>(mapObject);
 
         return mapObject;
     }

@@ -39,6 +39,7 @@ public class BulletMoveDailyAction : DailyAction
         continueTouchWall.AddBehavior(touchWallBehavior);
         behaviorTree.AddBehavior("touchWall", continueTouchWall, BehaviorTree.NodeType.Serial);
 
+
         SingleNodeBehavior singleNodeBehavior = new SingleNodeBehavior();
         BulletAttackBehavior plantAttackBehavior = new BulletAttackBehavior();
         BulletAttackBehavior.BulletAttackBehaviorInfo plantAttackBehaviorInfo = new BulletAttackBehavior.BulletAttackBehaviorInfo();
@@ -47,6 +48,7 @@ public class BulletMoveDailyAction : DailyAction
         plantAttackBehavior.Enviorment = plantAttackBehaviorInfo;
         singleNodeBehavior.AddBehavior(plantAttackBehavior);
         behaviorTree.AddBehavior("attack", singleNodeBehavior, BehaviorTree.NodeType.Serial);
+
 
 
         return behaviorTree;

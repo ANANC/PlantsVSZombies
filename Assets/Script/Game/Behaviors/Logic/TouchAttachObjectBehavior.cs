@@ -8,9 +8,7 @@ public class TouchAttachObjectBehavior : LogicBehavior
     {
         public int layerMask;
         public MapObject mapObject;
-        public Vector3 dir;
-        public float radius;
-        public float maxDistance;
+        public float distance;
     }
 
     public class AddAttachBehaviorEnvironmentInfo : IBehaviorEnvironmentInfo
@@ -23,6 +21,13 @@ public class TouchAttachObjectBehavior : LogicBehavior
     private RaycastHit hitInfo;
     private int layerMask;
     private TouchBehaviorInfo Info;
+    private Transform touch;
+
+    private Vector3[] dirs = new Vector3[] 
+    {
+        Vector3.left,Vector3.right,Vector3.up,Vector3.down,
+        new Vector3(1,1,0),new Vector3(1,-1,0),new Vector3(-1,1,0),new Vector3(-1,-1,0)
+    };
 
 
     public override void Enter()
@@ -33,22 +38,35 @@ public class TouchAttachObjectBehavior : LogicBehavior
 
     public override void Execute()
     {
-        Debug.DrawLine(follow.position + Info.radius * Info.maxDistance * Vector3.left, follow.position + Info.radius * Info.maxDistance * Vector3.right, Color.yellow);
-
-        if (Physics.SphereCast(follow.position, Info.radius, Info.dir, out hitInfo, Info.maxDistance, layerMask))
+        touch = null;
+        for (int index = 0; index < dirs.Length; index++)
         {
-            Debug.Log("Touch! Try Add Attach!");
+            Vector3 dir = dirs[index];
+            Debug.DrawLine(follow.position, follow.position + dir * Info.distance, Color.yellow);
 
-            Node.Complete = true;
-
-            Transform touch = hitInfo.collider.transform;
-            MapObject mapObjct = GlobalEnvironment.Instance.Get<MapObjectManager>().GetMapObject(touch);
-            if (mapObjct != null)
+            if (Physics.Raycast(follow.position, dir, out hitInfo, Info.distance, layerMask))
             {
-                AddAttachBehaviorEnvironmentInfo addAttachBehaviorEnvironmentInfo = new AddAttachBehaviorEnvironmentInfo();
-                addAttachBehaviorEnvironmentInfo.mapObject = mapObjct;
-                Node.BehaviorTree.Environment.Add<AddAttachBehaviorEnvironmentInfo>(addAttachBehaviorEnvironmentInfo);
+                touch = hitInfo.collider.transform;
+                break;
             }
         }
+
+        if (touch == null)
+        {
+            return;
+        }
+
+        Debug.Log("Touch! Try Add Attach!");
+
+        Node.Complete = true;
+
+        MapObject mapObjct = GlobalEnvironment.Instance.Get<MapObjectManager>().GetMapObject(touch);
+        if (mapObjct != null)
+        {
+            AddAttachBehaviorEnvironmentInfo addAttachBehaviorEnvironmentInfo = new AddAttachBehaviorEnvironmentInfo();
+            addAttachBehaviorEnvironmentInfo.mapObject = mapObjct;
+            Node.BehaviorTree.Environment.Add<AddAttachBehaviorEnvironmentInfo>(addAttachBehaviorEnvironmentInfo);
+        }
+
     }
 }
