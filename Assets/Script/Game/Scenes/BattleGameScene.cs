@@ -55,14 +55,15 @@ public class BattleGameScene : GameScene
                 Color color = transform.GetComponent<MeshRenderer>().material.color;
                 color.r += Random.Range(-0.08f, 0.08f);
                 color.b += Random.Range(-0.08f, 0.08f);
+                color.a = 0.5f;
                 transform.GetComponent<MeshRenderer>().material.color = color;
             }
         }
 
-        UIManager uiMgr = GlobalEnvironment.Instance.Get<UIManager>();
-        MainUIController mainUIController = uiMgr.OpenUI<MainUIController>(GameDefine.UIName.MainUI);
-        SelectPlantUIController selectPlantUIController = uiMgr.OpenSubUI<SelectPlantUIController>(GameDefine.UIName.MainUI, GameDefine.UIName.SelectPlantUI, mainUIController.TopLeftTransform);
-        selectPlantUIController.RefreshCells(new GameDefine.PlantType[] { GameDefine.PlantType.Shooter });
+        //UIManager uiMgr = GlobalEnvironment.Instance.Get<UIManager>();
+        //MainUIController mainUIController = uiMgr.OpenUI<MainUIController>(GameDefine.UIName.MainUI);
+        //SelectPlantUIController selectPlantUIController = uiMgr.OpenSubUI<SelectPlantUIController>(GameDefine.UIName.MainUI, GameDefine.UIName.SelectPlantUI, mainUIController.TopLeftTransform);
+        //selectPlantUIController.RefreshCells(new GameDefine.PlantType[] { GameDefine.PlantType.Shooter });
 
         GameMapObjectMgr.CreateShooter(Vector3.zero);
         GameMapObjectMgr.CreateShooter(Vector3.one);

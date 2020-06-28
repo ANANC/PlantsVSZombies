@@ -19,7 +19,6 @@ public class TouchAttachObjectBehavior : LogicBehavior
     private Transform follow;
 
     private RaycastHit hitInfo;
-    private int layerMask;
     private TouchBehaviorInfo Info;
     private Transform touch;
 
@@ -44,8 +43,9 @@ public class TouchAttachObjectBehavior : LogicBehavior
             Vector3 dir = dirs[index];
             Debug.DrawLine(follow.position, follow.position + dir * Info.distance, Color.yellow);
 
-            if (Physics.Raycast(follow.position, dir, out hitInfo, Info.distance, layerMask))
+            if (Physics.Raycast(follow.position, dir, out hitInfo, Info.distance, Info.layerMask))
             {
+                Debug.Log("Touch! Try Add Attach!");
                 touch = hitInfo.collider.transform;
                 break;
             }
@@ -55,8 +55,6 @@ public class TouchAttachObjectBehavior : LogicBehavior
         {
             return;
         }
-
-        Debug.Log("Touch! Try Add Attach!");
 
         Node.Complete = true;
 

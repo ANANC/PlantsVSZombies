@@ -73,7 +73,13 @@ public class RepresentManager : IManager
             for(int index =0;index< ExecuteList.Count;index++)
             {
                 RepresentHandle handle = ExecuteList[index];
-                List<MapObject> mapObjects = HandleRegisterDict[handle];
+
+                List<MapObject> mapObjects;
+                if (!HandleRegisterDict.TryGetValue(handle, out mapObjects))
+                {
+                    Debug.Log("RepresentManager Execute Fail.Handle Register Is Empty. type:" + handle.GetType().Name);
+                    continue;
+                }
 
                 if(mapObjects.Count == 0)
                 {
@@ -172,7 +178,7 @@ public class RepresentManager : IManager
 
                 if (mapObjects.Count == 0)
                 {
-                    DeleteMapObjectList.Add(handle);
+                    DeleteMapObjectList.Remove(handle);
                 }
             }
 

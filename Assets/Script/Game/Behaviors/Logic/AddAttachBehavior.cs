@@ -14,6 +14,7 @@ public class AddAttachBehavior : LogicBehavior
 
     public override void Enter()
     {
+        Info = (AddAttachBehaviorInfo)Enviorment;
         EnvironmentInfo = Node.BehaviorTree.Environment.Get<TouchAttachObjectBehavior.AddAttachBehaviorEnvironmentInfo>();
     }
 
