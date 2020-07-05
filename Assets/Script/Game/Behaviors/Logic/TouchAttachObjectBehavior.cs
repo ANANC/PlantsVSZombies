@@ -45,7 +45,7 @@ public class TouchAttachObjectBehavior : LogicBehavior
 
             if (Physics.Raycast(follow.position, dir, out hitInfo, Info.distance, Info.layerMask))
             {
-                Debug.Log("Touch! Try Add Attach!");
+               // Debug.Log("Touch! Try Add Attach!");
                 touch = hitInfo.collider.transform;
                 break;
             }

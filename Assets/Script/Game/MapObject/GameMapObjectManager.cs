@@ -11,6 +11,7 @@ public class GameMapObjectManager : IManager
 
     private CellMap GardenMap;
 
+
     public void Init()
     {
         SkillMgr = GlobalEnvironment.Instance.Get<SkillManager>();
@@ -37,6 +38,11 @@ public class GameMapObjectManager : IManager
     {
         GardenMap = new CellMap();
         GardenMap.Enter();
+    }
+
+    public void ExistBattle()
+    {
+        MapObjectMgr.DestroyAll();
     }
 
     public MapObject CreateShooter(Vector3 logicPos)
@@ -107,7 +113,7 @@ public class GameMapObjectManager : IManager
         mapObjectArtAttribute.gameObject = gameObject;
         mapObjectArtAttribute.transform = gameObject.transform;
         mapObjectArtAttribute.transform.localPosition = postion;
-        mapObjectArtAttribute.MaxSpeed = 0.05f;
+        mapObjectArtAttribute.MaxSpeed = 0.03f;
 
         RepresentMgr.RegisterMapObject<MoveArtHandle>(mapObject);
         RepresentMgr.RegisterMapObject<DeathArtHandle>(mapObject);
@@ -126,7 +132,7 @@ public class GameMapObjectManager : IManager
         mapObjectArtAttribute.gameObject = gameObject;
         mapObjectArtAttribute.transform = gameObject.transform;
         mapObjectArtAttribute.transform.position = position;
-        mapObjectArtAttribute.MaxSpeed = 0.1f;
+        mapObjectArtAttribute.MaxSpeed = 0.08f;
 
         MapOjectAttribute mapObjectAttribute = mapObject.GetAttribute<MapOjectAttribute>();
         mapObjectAttribute.Hp = 1;
@@ -139,5 +145,10 @@ public class GameMapObjectManager : IManager
         GlobalEnvironment.Instance.Get<RepresentManager>().RegisterMapObject<AttachArtHandle>(mapObject);
 
         return mapObject;
+    }
+
+    public void DestroyMapObject(int id)
+    {
+        MapObjectMgr.DeleteMapObject(id);
     }
 }

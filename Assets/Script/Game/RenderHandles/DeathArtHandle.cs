@@ -24,6 +24,10 @@ public class DeathArtHandle : RepresentHandle
             return;
         }
 
-        GlobalEnvironment.Instance.Get<MapObjectManager>().DeleteMapObject(attribute.Id);
+       
+        GlobalEnvironment.Instance.Get<GameMapObjectManager>().DestroyMapObject(attribute.Id);
+        BattleGameScene battleGameScene = (BattleGameScene)GlobalEnvironment.Instance.Get<SceneManager>().GetScene(GameDefine.Scene.Battle);
+        GardenBattleGamePlay gardenBattleGamePlay = (GardenBattleGamePlay)battleGameScene.GamePlay;
+        gardenBattleGamePlay.CharacterDeath(art.gameObject.layer, art.transform.position);
     }
 }

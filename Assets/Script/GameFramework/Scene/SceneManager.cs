@@ -12,9 +12,9 @@ public class SceneManager : IManager
     {
         SceneDict = new Dictionary<string, GameScene>()
         {
+            { GameDefine.Scene.Login,new LoginGameScene() },
             {GameDefine.Scene.Battle,new BattleGameScene() },
         };
-
     }
 
     public void UnInit()
@@ -51,5 +51,15 @@ public class SceneManager : IManager
         {
             CurScene.Enter();
         }
+    }
+
+    public GameScene GetScene(string sceneType)
+    {
+        GameScene scene;
+        if (SceneDict.TryGetValue(sceneType, out scene))
+        {
+            return scene;
+        }
+        return null;
     }
 }

@@ -42,6 +42,6 @@ public class Entrance : MonoBehaviour
         uiMgr.SetUIFolderPath("Art/UI/Prefab");
 
         SceneManager sceneManager = GlobalEnvironment.Instance.Get<SceneManager>();
-        sceneManager.Enter(GameDefine.Scene.Battle);
+        sceneManager.Enter(GameDefine.Scene.Login);
     }
 }

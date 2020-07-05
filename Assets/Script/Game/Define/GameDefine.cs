@@ -6,6 +6,7 @@ public static class GameDefine
 {
     public static class Scene
     {
+        public const string Login = "Login";
         public const string Battle = "Battle";
     }
 
@@ -38,6 +39,9 @@ public static class GameDefine
         public const string MainUI = "MainUI";
         public const string SelectPlantUI = "SelectPlantUI";
         public const string SelectPlantCell = "SelectPlantCell";
+        public const string WinPlant = "WinPlant";
+        public const string FailPlant = "FailPlant";
+        public const string LoginPlant = "LoginPlant";
     }
 
 

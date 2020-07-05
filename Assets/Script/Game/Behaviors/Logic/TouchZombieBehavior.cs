@@ -34,7 +34,7 @@ public class TouchZombieBehavior : LogicBehavior
 
         if (Physics.Raycast(follow.position, Info.dir, out hitInfo, Info.distance, layerMask))
         {
-            Debug.Log("Touch Zombie!");
+           // Debug.Log("Touch Zombie!");
 
             Node.Complete = true;
 

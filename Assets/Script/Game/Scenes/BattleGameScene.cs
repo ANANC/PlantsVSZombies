@@ -6,7 +6,7 @@ public class BattleGameScene : GameScene
 {
     private Transform GardenParent;
 
-    private GardenBattleGamePlay GamePlay;
+    public GardenBattleGamePlay GamePlay;
 
     private GameMapObjectManager GameMapObjectMgr;
 
@@ -33,6 +33,9 @@ public class BattleGameScene : GameScene
     public override void Exist()
     {
         GamePlay.Exist();
+        GameObject.Destroy(GardenParent.gameObject);
+        GlobalEnvironment.Instance.Get<UIManager>().DestroyUI(GameDefine.UIName.WinPlant);
+        GlobalEnvironment.Instance.Get<UIManager>().DestroyUI(GameDefine.UIName.FailPlant);
     }
 
     public override void Update()

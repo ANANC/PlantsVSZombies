@@ -17,7 +17,7 @@ public class MapObjectManager:IManager
 
     public void UnInit()
     {
-
+        DestroyAll();
     }
 
     public void Start()
@@ -109,5 +109,21 @@ public class MapObjectManager:IManager
         }
 
         return null;
+    }
+
+    public void DestroyAll()
+    {
+        for (int index = 0;index< MapObjectList.Count;index++)
+        {
+            MapObject mapObject = MapObjectList[index];
+
+            mapObject.UnInit();
+
+            GlobalEnvironment.Instance.Get<RepresentManager>().MapObjectUnRegisterAll(mapObject);
+            GlobalEnvironment.Instance.Get<DailyManager>().MapObjectUnReigisterAll(mapObject);
+        }
+
+        MapObjectList.Clear();
+        MapObjectDict.Clear();
     }
 }

@@ -27,7 +27,7 @@ public class TouchWallBehavior : LogicBehavior
     {
         if (Physics.Raycast(follow.position, Info.dir, Info.distance, layerMask))
         {
-            Debug.Log("Touch Wall!");
+           // Debug.Log("Touch Wall!");
 
             Node.Complete = true;
 

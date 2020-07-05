@@ -16,6 +16,8 @@ public class GardenBattleGamePlay : GamePlay
 
     private GameMapObjectManager GameMapObjectMgr;
 
+    private int ZombieCount;
+
     public override void Enter()
     {
         GameMapObjectMgr = GlobalEnvironment.Instance.Get<GameMapObjectManager>();
@@ -24,14 +26,16 @@ public class GardenBattleGamePlay : GamePlay
         {
             5,10
         };
-        RefreshInterval = 3 * GameDefine.FrameValue;
-        ContinueTime = 12 * GameDefine.FrameValue;
+        RefreshInterval = 6 * GameDefine.FrameValue;
+        ContinueTime = 15 * GameDefine.FrameValue;
         EruptRangeMin = 1;
-        EruptRangeMax = 5;
+        EruptRangeMax = 4;
 
         CurTime = 0;
         CurIntervalTime = 0;
         CurPoint = 0;
+
+        ZombieCount = 0;
     }
 
     public override void Exist()
@@ -69,6 +73,29 @@ public class GardenBattleGamePlay : GamePlay
 
     private void CreateZombieToMap()
     {
+        ZombieCount += 1;
         GameMapObjectMgr.CreateZombieToMap(GameDefine.Path.Zombie, new Vector3(GameDefine.Garden.GardenWidth + 0.2f,Random.Range(0, GameDefine.Garden.GardenHeight), 0));
+    }
+
+    public void CharacterDeath(int layer, Vector3 position)
+    {
+        if (layer != LayerMask.NameToLayer(GameDefine.Layer.Zombie))
+        {
+            return;
+        }
+
+        ZombieCount -= 1;
+        if (position.x > 0)
+        {
+            if(ZombieCount == 0)
+            {
+                GameMapObjectMgr.ExistBattle();
+                GlobalEnvironment.Instance.Get<UIManager>().OpenUI<WinPlantUIController>(GameDefine.UIName.WinPlant);
+            }
+            return;
+        }
+
+        GameMapObjectMgr.ExistBattle();
+        GlobalEnvironment.Instance.Get<UIManager>().OpenUI<FailPlantUIController>(GameDefine.UIName.FailPlant);
     }
 }

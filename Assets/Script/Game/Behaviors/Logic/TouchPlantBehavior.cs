@@ -35,7 +35,7 @@ public class TouchPlantBehavior : LogicBehavior
 
         if (Physics.Raycast(follow.position, Info.dir, out hitInfo, Info.distance, layerMask))
         {
-            Debug.Log("Touch Plant!");
+           // Debug.Log("Touch Plant!");
 
             Node.Complete = true;
 

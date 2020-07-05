@@ -63,7 +63,6 @@ public class RepresentManager : IManager
             for (int index = 0; index < DeleteMapObjectList.Count; index++)
             {
                 ExecuteList.Remove(DeleteMapObjectList[index]);
-                HandleRegisterDict.Remove(DeleteMapObjectList[index]);
             }
             DeleteMapObjectList.Clear();
         }
@@ -78,7 +77,7 @@ public class RepresentManager : IManager
                 if (!HandleRegisterDict.TryGetValue(handle, out mapObjects))
                 {
                     Debug.Log("RepresentManager Execute Fail.Handle Register Is Empty. type:" + handle.GetType().Name);
-                    continue;
+                    break;
                 }
 
                 if(mapObjects.Count == 0)
@@ -143,11 +142,10 @@ public class RepresentManager : IManager
         if (HandleRegisterDict.TryGetValue(handle, out mapObjects))
         {
             mapObjects.Remove(mapObject);
-        }
-
-        if (mapObjects.Count == 0)
-        {
-            DeleteMapObjectList.Add(handle);
+            if (mapObjects.Count == 0)
+            {
+                DeleteMapObjectList.Add(handle);
+            }
         }
 
         List<RepresentHandle> handles;
@@ -174,11 +172,10 @@ public class RepresentManager : IManager
                 if (HandleRegisterDict.TryGetValue(handle, out mapObjects))
                 {
                     mapObjects.Remove(mapObject);
-                }
-
-                if (mapObjects.Count == 0)
-                {
-                    DeleteMapObjectList.Remove(handle);
+                    if (mapObjects.Count == 0)
+                    {
+                        DeleteMapObjectList.Add(handle);
+                    }
                 }
             }
 
