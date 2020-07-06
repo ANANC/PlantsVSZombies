@@ -4,20 +4,36 @@ using UnityEngine;
 
 public class Entrance : MonoBehaviour
 {
+    private const float Frame = 30;
+    private float DeltaTime;
+    private float CurDeltaTime;
+
+    private void Awake()
+    {
+        Screen.SetResolution(1024, 768, false);
+    }
+
     void Start()
     {
-        Application.targetFrameRate = 30;
+        DeltaTime = 1 / Frame;
+        CurDeltaTime = 0;
 
         FormworkRegister();
         GameRegister();
 
         GlobalEnvironment.Instance.Start();
 
-       StartGame();
+        StartGame();
     }
 
     void Update()
     {
+        CurDeltaTime += Time.deltaTime;
+        if(CurDeltaTime< DeltaTime)
+        {
+            return;
+        }
+        CurDeltaTime = 0;
         GlobalEnvironment.Instance.Update();
     }
 

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public static class GameDefine 
 {
+    public const float DeltaTime = 0.02f;
+
     public static class Scene
     {
         public const string Login = "Login";
@@ -17,6 +19,9 @@ public static class GameDefine
         public const string Zombie = "Art/Model/Prefab/Zombie";
         public const string Lawn = "Art/Model/Prefab/Lawn";
         public const string Torchwood = "Art/Model/Prefab/Torchwood";
+
+        public const string BattleSound = "Art/Sound/Prefab/BattleSound";
+        public const string LoginSound = "Art/Sound/Prefab/LoginSound";
     }
 
     public static class Layer

@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class BattleGameScene : GameScene
 {
+    AudioSource AudioSource;
+
     private Transform GardenParent;
 
     public GardenBattleGamePlay GamePlay;
@@ -13,6 +15,9 @@ public class BattleGameScene : GameScene
 
     public override void Init()
     {
+        GameObject Sound = GlobalEnvironment.Instance.Get<ResourceManager>().Instance(GameDefine.Path.BattleSound);
+        AudioSource = Sound.GetComponent<AudioSource>();
+
         GardenArt();
         GardenParent.gameObject.SetActive(false);
     }
@@ -24,6 +29,8 @@ public class BattleGameScene : GameScene
 
     public override void Enter()
     {
+        AudioSource.Play();
+
         GameMapObjectMgr = GlobalEnvironment.Instance.Get<GameMapObjectManager>();
         GameMapObjectMgr.EnterBattle();
 
@@ -35,6 +42,8 @@ public class BattleGameScene : GameScene
 
     public override void Exist()
     {
+        AudioSource.Stop();
+
         GameMapObjectMgr.ExistBattle();
 
         GamePlay.Exist();
@@ -66,7 +75,10 @@ public class BattleGameScene : GameScene
         GameMapObjectMgr.CreateShooter(new Vector3(2, 3));
         GameMapObjectMgr.CreateShooter(new Vector3(3, 0));
         GameMapObjectMgr.CreateShooter(new Vector3(0, 2));
-
+        GameMapObjectMgr.CreateShooter(new Vector3(3, 2));
+        GameMapObjectMgr.CreateShooter(new Vector3(3, 3));
+        GameMapObjectMgr.CreateShooter(new Vector3(1, 3));
+        GameMapObjectMgr.CreateShooter(new Vector3(0, 1));
 
         GameMapObjectMgr.CreateTorchwood(new Vector3(1, 2));
 

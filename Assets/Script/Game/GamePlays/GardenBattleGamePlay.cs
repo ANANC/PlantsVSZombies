@@ -30,13 +30,13 @@ public class GardenBattleGamePlay : GamePlay
         {
             5,10
         };
-        RefreshInterval = 6 * GameDefine.FrameValue;
+        RefreshInterval = 10 * GameDefine.FrameValue;
         ContinueTime = 15 * GameDefine.FrameValue;
         EruptRangeMin = 1;
-        EruptRangeMax = 4;
+        EruptRangeMax = 3;
 
         CurTime = 0;
-        CurIntervalTime = 0;
+        CurIntervalTime = RefreshInterval;
         CurPoint = 0;
 
         ZombieCount = 0;
@@ -49,11 +49,16 @@ public class GardenBattleGamePlay : GamePlay
 
     public override void Update()
     {
+        if (OverGame)
+        {
+            return;
+        }
+
         if (CurTime <= ContinueTime)
         {
-            CurTime += Time.deltaTime;
+            CurTime += GameDefine.DeltaTime;
 
-            CurIntervalTime += Time.deltaTime;
+            CurIntervalTime += GameDefine.DeltaTime;
             if (CurIntervalTime > RefreshInterval)
             {
                 CurIntervalTime = 0;
@@ -78,7 +83,7 @@ public class GardenBattleGamePlay : GamePlay
     private void CreateZombieToMap()
     {
         ZombieCount += 1;
-        GameMapObjectMgr.CreateZombieToMap(GameDefine.Path.Zombie, new Vector3(GameDefine.Garden.GardenWidth + Random.Range(0,3), Random.Range(0, GameDefine.Garden.GardenHeight), 0));
+        GameMapObjectMgr.CreateZombieToMap(GameDefine.Path.Zombie, new Vector3(GameDefine.Garden.GardenWidth + Random.Range(1,3), Random.Range(0, GameDefine.Garden.GardenHeight), 0));
     }
 
     public void CharacterDeath(int layer, Vector3 position)

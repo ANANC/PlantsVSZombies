@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class LoginUIController : BaseUIObject
 {
     private Button BattleButton;
+
     public override void Init()
     {
         BattleButton = FindComponent<Button>("Button");

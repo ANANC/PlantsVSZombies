@@ -37,7 +37,14 @@ public class AttachArtHandle : RepresentHandle
             color = Red;
         }
 
-        mapObjectArtAttribute.material.color = color;
+        if (mapObjectArtAttribute.material.color != color)
+        {
+            mapObjectArtAttribute.material.color = color;
+        }
+        if(!mapObjectArtAttribute.gameObject.activeSelf)
+        {
+            mapObjectArtAttribute.gameObject.SetActive(true);
+        }
     }
 
 }

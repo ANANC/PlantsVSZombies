@@ -8,7 +8,6 @@ public class GameMapObjectManager : IManager
 
     private MapObjectManager MapObjectMgr;
     private RepresentManager RepresentMgr;
-    private SkillManager SkillMgr;
     private DailyManager DailyMgr;
 
     private CellMap GardenMap;
@@ -21,7 +20,6 @@ public class GameMapObjectManager : IManager
 
     public void Init()
     {
-        SkillMgr = GlobalEnvironment.Instance.Get<SkillManager>();
         MapObjectMgr = GlobalEnvironment.Instance.Get<MapObjectManager>();
         RepresentMgr = GlobalEnvironment.Instance.Get<RepresentManager>();
         DailyMgr = GlobalEnvironment.Instance.Get<DailyManager>();
@@ -59,6 +57,11 @@ public class GameMapObjectManager : IManager
         GardenMap = null;
 
         DestroyAll();
+        MapObjectMgr.DestroyAll();
+
+        MapObjectResPathDict.Clear();
+        AllMapObjectList.Clear();
+
     }
 
     public MapObject CreateShooter(Vector3 logicPos)
@@ -102,7 +105,7 @@ public class GameMapObjectManager : IManager
         mapObjectAttribute.Hp = 5;
 
         // 表现    
-        GameObject gameObject = PopPool(resPath);
+        GameObject gameObject = PopPool(resPath,true);
         if (gameObject == null)
         {
             gameObject = GlobalEnvironment.Instance.Get<ResourceManager>().Instance(resPath);
@@ -132,7 +135,7 @@ public class GameMapObjectManager : IManager
         mapObjectAttribute.Hp = 5;
 
         // 表现
-        GameObject gameObject = PopPool(resPath);
+        GameObject gameObject = PopPool(resPath,true);
         if (gameObject == null)
         {
             gameObject = GlobalEnvironment.Instance.Get<ResourceManager>().Instance(resPath);
@@ -143,7 +146,7 @@ public class GameMapObjectManager : IManager
         mapObjectArtAttribute.gameObject = gameObject;
         mapObjectArtAttribute.transform = gameObject.transform;
         mapObjectArtAttribute.transform.position = postion;
-        mapObjectArtAttribute.MaxSpeed = 0.002f;
+        mapObjectArtAttribute.MaxSpeed = 0.001f;
 
         RepresentMgr.RegisterMapObject<MoveArtHandle>(mapObject);
         RepresentMgr.RegisterMapObject<DeathArtHandle>(mapObject);
@@ -166,7 +169,7 @@ public class GameMapObjectManager : IManager
         mapObjectAttribute.Position = position;
 
         MapObjectArtAttribute mapObjectArtAttribute = mapObject.GetAttribute<MapObjectArtAttribute>();
-        GameObject gameObject = PopPool(resPath);
+        GameObject gameObject = PopPool(resPath,false);
         if (gameObject == null)
         {
             gameObject = GlobalEnvironment.Instance.Get<ResourceManager>().Instance(resPath);
@@ -176,7 +179,7 @@ public class GameMapObjectManager : IManager
         mapObjectArtAttribute.gameObject = gameObject;
         mapObjectArtAttribute.transform = gameObject.transform;
         mapObjectArtAttribute.transform.position = position;
-        mapObjectArtAttribute.MaxSpeed = 0.004f;
+        mapObjectArtAttribute.MaxSpeed = 0.002f;
 
         mapObject.AddAttribute<AttachAttackAttribute>(typeof(AttachAttackAttribute).Name, new AttachAttackAttribute());
 
@@ -228,7 +231,7 @@ public class GameMapObjectManager : IManager
         }
         ResourceGameObjectPool[resPath].Push(gameObject);
     }
-    private GameObject PopPool(string resPath)
+    private GameObject PopPool(string resPath,bool active)
     {
         Stack<GameObject> gameObjects;
         if(ResourceGameObjectPool.TryGetValue(resPath,out gameObjects))
@@ -238,7 +241,7 @@ public class GameMapObjectManager : IManager
                 return null;
             }
             GameObject gameObject = gameObjects.Pop();
-            gameObject.SetActive(true);
+            gameObject.SetActive(active);
             return gameObject;
         }
         return null;

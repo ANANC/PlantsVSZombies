@@ -74,7 +74,7 @@ public class RepresentManager : IManager
 
         if (DeleteMapObjectDict.Count > 0)
         {
-            Dictionary<RepresentHandle, List<MapObject>>.Enumerator enumerator = AddMapObjectDict.GetEnumerator();
+            Dictionary<RepresentHandle, List<MapObject>>.Enumerator enumerator = DeleteMapObjectDict.GetEnumerator();
             while (enumerator.MoveNext())
             {
                 List<MapObject> mapObjects;

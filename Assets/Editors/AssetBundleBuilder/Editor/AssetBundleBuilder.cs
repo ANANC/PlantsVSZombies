@@ -271,7 +271,7 @@ public class AssetBundleBuilder
             }
         }
 
-        AssetBundleBuild_FileToAssetBundle(filePath, loadPath);
+        AssetBundleBuild_FileToAssetBundle(filePath, loadPath.Replace(m_StartPath + "/", string.Empty));
     }
 
     private void BuildConfigure_DirectoryEventFileToAB(string directoryPath, string loadPath = null) //"Game/Reousrce/Prefab"
@@ -291,7 +291,7 @@ public class AssetBundleBuilder
 
         for (int index = 0; index < fileList.Count; index++)
         {
-            AssetBundleBuild_FileToAssetBundle(directoryPath + "/" + fileList[index], loadPath + "/" + fileList[index]);
+            AssetBundleBuild_FileToAssetBundle(directoryPath + "/" + fileList[index], (loadPath + "/" + fileList[index]).Replace(m_StartPath + "/", string.Empty));
         }
     }
 
@@ -307,7 +307,7 @@ public class AssetBundleBuilder
             loadPath = directoryPath;
         }
 
-        AssetBundleBuild_DirectoryToAssetBundle(directoryPath, loadPath);
+        AssetBundleBuild_DirectoryToAssetBundle(directoryPath, loadPath.Replace(m_StartPath + "/", string.Empty));
     }
 
     private void BuildConfigure_EventDirectoryToAB(string directoryPath, string loadPath = null) //"Game/Reource"
@@ -326,7 +326,7 @@ public class AssetBundleBuilder
         for (int index = 0; index < directories.Length; index++)
         {
             AssetBundleBuild_DirectoryToAssetBundle(directoryPath + "/" + directories[index],
-                loadPath + "/" + directories[index]);
+                (loadPath + "/" + directories[index]).Replace(m_StartPath + "/", string.Empty));
         }
     }
 

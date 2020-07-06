@@ -23,6 +23,11 @@ public class MoveArtHandle : RepresentHandle
             return;
         }
 
+        if(art.MaxSpeed == 0)
+        {
+            Debug.LogError("MaxSpeed Is 0. mapObject Name:" + art.transform.name);
+        }
+
         Vector3 transformPos = art.transform.position;
         Vector3 distance = attribute.Position - transformPos;
 

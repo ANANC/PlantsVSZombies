@@ -32,7 +32,7 @@ public class ContinueBehavior : NodeBehavior
         }
         else
         {
-            CurTime += Time.deltaTime;
+            CurTime += GameDefine.DeltaTime;
             Complete = CurTime > FinishTime;
         }
 

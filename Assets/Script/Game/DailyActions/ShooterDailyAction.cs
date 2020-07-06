@@ -10,7 +10,7 @@ public class ShooterDailyAction : DailyAction
 
         MapObjectAttribute mapOjectAttribute = mapObject.GetAttribute<MapObjectAttribute>();
 
-        IntervalBehavior intervalBehavior = new IntervalBehavior(6, -1);
+        IntervalBehavior intervalBehavior = new IntervalBehavior(10, -1);
         TouchZombieBehavior touchZombieBehavior = new TouchZombieBehavior();
         TouchZombieBehavior.TouchZombieBehaviorInfo touchZombieInfo = new TouchZombieBehavior.TouchZombieBehaviorInfo();
         touchZombieInfo.dir = Vector3.right;

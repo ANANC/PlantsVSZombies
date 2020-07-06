@@ -40,6 +40,8 @@ public class AssetBundleBuildUser
     {
         m_Builder.AddConfigure(AssetBundleBuilder.ConfigureType.EF2O, "Art/Model/Prefab");
         m_Builder.AddConfigure(AssetBundleBuilder.ConfigureType.EF2O, "Art/UI/Prefab");
+        m_Builder.AddConfigure(AssetBundleBuilder.ConfigureType.EF2O, "Art/Sound/Prefab");
+        m_Builder.AddConfigure(AssetBundleBuilder.ConfigureType.D2O, "Art/Sound/Sound");
     }
 
     // -- Editor ResourceLoader --

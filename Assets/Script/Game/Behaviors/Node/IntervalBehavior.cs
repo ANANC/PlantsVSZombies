@@ -38,11 +38,11 @@ public class IntervalBehavior : NodeBehavior
         }
         else
         {
-            CurTime += Time.deltaTime;
+            CurTime += GameDefine.DeltaTime;
             Complete = CurTime > FinishTime;
         }
 
-        CurIntervalTimer += Time.deltaTime;
+        CurIntervalTimer += GameDefine.DeltaTime;
         if (CurIntervalTimer >= IntervalTime)
         {
             CurIntervalTimer = 0;
