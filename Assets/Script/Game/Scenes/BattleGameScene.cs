@@ -35,6 +35,8 @@ public class BattleGameScene : GameScene
 
     public override void Exist()
     {
+        GameMapObjectMgr.ExistBattle();
+
         GamePlay.Exist();
         GamePlay = null;
 

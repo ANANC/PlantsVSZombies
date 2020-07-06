@@ -18,9 +18,13 @@ public class GardenBattleGamePlay : GamePlay
 
     private int ZombieCount;
 
+    private bool OverGame;
+
     public override void Enter()
     {
         GameMapObjectMgr = GlobalEnvironment.Instance.Get<GameMapObjectManager>();
+
+        OverGame = false;
 
         KeyPoints = new float[]
         {
@@ -40,7 +44,7 @@ public class GardenBattleGamePlay : GamePlay
 
     public override void Exist()
     {
-
+        OverGame = true;
     }
 
     public override void Update()
@@ -79,6 +83,10 @@ public class GardenBattleGamePlay : GamePlay
 
     public void CharacterDeath(int layer, Vector3 position)
     {
+        if (OverGame)
+        {
+            return;
+        }
         if (layer != LayerMask.NameToLayer(GameDefine.Layer.Zombie))
         {
             return;
@@ -87,15 +95,14 @@ public class GardenBattleGamePlay : GamePlay
         ZombieCount -= 1;
         if (position.x > 0)
         {
-            if(ZombieCount == 0)
+            if (ZombieCount == 0)
             {
-                GameMapObjectMgr.ExistBattle();
+                OverGame = true;
                 GlobalEnvironment.Instance.Get<UIManager>().OpenUI<WinPlantUIController>(GameDefine.UIName.WinPlant);
             }
             return;
         }
-
-        GameMapObjectMgr.ExistBattle();
+        OverGame = true;
         GlobalEnvironment.Instance.Get<UIManager>().OpenUI<FailPlantUIController>(GameDefine.UIName.FailPlant);
     }
 }
