@@ -11,7 +11,7 @@ public class AttachAttackBehavior : LogicBehavior
 
     private AttachAttackBehaviorInfo Info;
 
-    private MapOjectAttribute mapOjectAttribute;
+    private MapObjectAttribute mapOjectAttribute;
     private AttachAttackAttribute attachAttackAttribute;
 
     public override void Enter()
@@ -20,7 +20,7 @@ public class AttachAttackBehavior : LogicBehavior
 
         if (Info.mapObject != null && Info.mapObject.IsActive())
         {
-            mapOjectAttribute = Info.mapObject.GetAttribute<MapOjectAttribute>();
+            mapOjectAttribute = Info.mapObject.GetAttribute<MapObjectAttribute>();
             attachAttackAttribute = Info.mapObject.GetAttribute<AttachAttackAttribute>();
         }
     }

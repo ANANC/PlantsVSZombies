@@ -21,6 +21,6 @@ public class MoveBehavior : LogicBehavior
 
     public override void Execute()
     {
-        Info.targer.GetAttribute<MapOjectAttribute>().Position += Info.dir * Info.speed;
+        Info.targer.GetAttribute<MapObjectAttribute>().Position += Info.dir * Info.speed;
     }
 }

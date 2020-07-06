@@ -4,12 +4,19 @@ using UnityEngine;
 
 public class GameMapObjectManager : IManager
 {
+    private GameObject MapObjctParent;
+
     private MapObjectManager MapObjectMgr;
     private RepresentManager RepresentMgr;
     private SkillManager SkillMgr;
     private DailyManager DailyMgr;
 
     private CellMap GardenMap;
+
+    private List<MapObject> AllMapObjectList;
+
+    private Dictionary<int, string> MapObjectResPathDict;
+    private Dictionary<string, Stack<GameObject>> ResourceGameObjectPool;
 
 
     public void Init()
@@ -18,6 +25,12 @@ public class GameMapObjectManager : IManager
         MapObjectMgr = GlobalEnvironment.Instance.Get<MapObjectManager>();
         RepresentMgr = GlobalEnvironment.Instance.Get<RepresentManager>();
         DailyMgr = GlobalEnvironment.Instance.Get<DailyManager>();
+        ResourceGameObjectPool = new Dictionary<string, Stack<GameObject>>();
+        MapObjectResPathDict = new Dictionary<int, string>();
+        AllMapObjectList = new List<MapObject>();
+
+
+        MapObjctParent = new GameObject("MapObjct");
     }
 
     public void Start()
@@ -42,7 +55,10 @@ public class GameMapObjectManager : IManager
 
     public void ExistBattle()
     {
-        MapObjectMgr.DestroyAll();
+        GardenMap.Exist();
+        GardenMap = null;
+
+        DestroyAll();
     }
 
     public MapObject CreateShooter(Vector3 logicPos)
@@ -80,20 +96,28 @@ public class GameMapObjectManager : IManager
 
         // 逻辑
         MapObject mapObject = MapObjectMgr.InstanceMapObject();
-        GardenMap.AddMapObjectToMap(mapObject.GetAttribute<MapOjectAttribute>().Id, logicPos);
-        MapOjectAttribute mapOjectAttribute = mapObject.GetAttribute<MapOjectAttribute>();
-        mapOjectAttribute.Position = logicPos;
-        mapOjectAttribute.Hp = 5;
+        GardenMap.AddMapObjectToMap(mapObject.GetAttribute<MapObjectAttribute>().Id, logicPos);
+        MapObjectAttribute mapObjectAttribute = mapObject.GetAttribute<MapObjectAttribute>();
+        mapObjectAttribute.Position = logicPos;
+        mapObjectAttribute.Hp = 5;
 
-        // 表现
-        GameObject gameObject = GlobalEnvironment.Instance.Get<ResourceManager>().Instance(resPath);
+        // 表现    
+        GameObject gameObject = PopPool(resPath);
+        if (gameObject == null)
+        {
+            gameObject = GlobalEnvironment.Instance.Get<ResourceManager>().Instance(resPath);
+            gameObject.transform.SetParent(MapObjctParent.transform);
+        }
+        MapObjectResPathDict.Add(mapObjectAttribute.Id, resPath);
         MapObjectArtAttribute mapObjectArtAttribute = mapObject.GetAttribute<MapObjectArtAttribute>();
         mapObjectArtAttribute.gameObject = gameObject;
         mapObjectArtAttribute.transform = gameObject.transform;
         Vector3 postion = new Vector3(logicPos.x * GameDefine.Art.GardenCellSize.x, logicPos.y * GameDefine.Art.GardenCellSize.y, 0);
-        mapObjectArtAttribute.transform.localPosition = postion;
+        mapObjectArtAttribute.transform.position = postion;
 
         RepresentMgr.RegisterMapObject<DeathArtHandle>(mapObject);
+
+        AllMapObjectList.Add(mapObject);
 
         return mapObject;
     }
@@ -102,41 +126,59 @@ public class GameMapObjectManager : IManager
     {
         // 逻辑
         MapObject mapObject = MapObjectMgr.InstanceMapObject();
-        MapOjectAttribute mapOjectAttribute = mapObject.GetAttribute<MapOjectAttribute>();
+        MapObjectAttribute mapObjectAttribute = mapObject.GetAttribute<MapObjectAttribute>();
         Vector3 postion = new Vector3(logicPos.x * GameDefine.Art.GardenCellSize.x, logicPos.y * GameDefine.Art.GardenCellSize.y, 0);
-        mapOjectAttribute.Position = postion;
-        mapOjectAttribute.Hp = 5;
+        mapObjectAttribute.Position = postion;
+        mapObjectAttribute.Hp = 5;
 
         // 表现
-        GameObject gameObject = GlobalEnvironment.Instance.Get<ResourceManager>().Instance(resPath);
+        GameObject gameObject = PopPool(resPath);
+        if (gameObject == null)
+        {
+            gameObject = GlobalEnvironment.Instance.Get<ResourceManager>().Instance(resPath);
+            gameObject.transform.SetParent(MapObjctParent.transform);
+        }
+        MapObjectResPathDict.Add(mapObjectAttribute.Id, resPath);
         MapObjectArtAttribute mapObjectArtAttribute = mapObject.GetAttribute<MapObjectArtAttribute>();
         mapObjectArtAttribute.gameObject = gameObject;
         mapObjectArtAttribute.transform = gameObject.transform;
-        mapObjectArtAttribute.transform.localPosition = postion;
-        mapObjectArtAttribute.MaxSpeed = 0.03f;
+        mapObjectArtAttribute.transform.position = postion;
+        mapObjectArtAttribute.MaxSpeed = 0.002f;
 
         RepresentMgr.RegisterMapObject<MoveArtHandle>(mapObject);
         RepresentMgr.RegisterMapObject<DeathArtHandle>(mapObject);
 
         DailyMgr.RegisterDailyAction(mapObject, new TriggerZombieMoveDailyAction());
 
+        AllMapObjectList.Add(mapObject);
+
         return mapObject;
     }
 
     public MapObject CreateBullet(Vector3 position)
     {
+        string resPath = GameDefine.Path.Bullet;
+
         MapObject mapObject = GlobalEnvironment.Instance.Get<MapObjectManager>().InstanceMapObject();
 
+        MapObjectAttribute mapObjectAttribute = mapObject.GetAttribute<MapObjectAttribute>();
+        mapObjectAttribute.Hp = 1;
+        mapObjectAttribute.Position = position;
+
         MapObjectArtAttribute mapObjectArtAttribute = mapObject.GetAttribute<MapObjectArtAttribute>();
-        GameObject gameObject = GlobalEnvironment.Instance.Get<ResourceManager>().Instance(GameDefine.Path.Bullet);
+        GameObject gameObject = PopPool(resPath);
+        if (gameObject == null)
+        {
+            gameObject = GlobalEnvironment.Instance.Get<ResourceManager>().Instance(resPath);
+            gameObject.transform.SetParent(MapObjctParent.transform);
+        }
+        MapObjectResPathDict.Add(mapObjectAttribute.Id, resPath);
         mapObjectArtAttribute.gameObject = gameObject;
         mapObjectArtAttribute.transform = gameObject.transform;
         mapObjectArtAttribute.transform.position = position;
-        mapObjectArtAttribute.MaxSpeed = 0.08f;
+        mapObjectArtAttribute.MaxSpeed = 0.004f;
 
-        MapOjectAttribute mapObjectAttribute = mapObject.GetAttribute<MapOjectAttribute>();
-        mapObjectAttribute.Hp = 1;
-        mapObjectAttribute.Position = position;
+        mapObject.AddAttribute<AttachAttackAttribute>(typeof(AttachAttackAttribute).Name, new AttachAttackAttribute());
 
         GlobalEnvironment.Instance.Get<DailyManager>().RegisterDailyAction(mapObject, new BulletMoveDailyAction());
 
@@ -144,11 +186,61 @@ public class GameMapObjectManager : IManager
         GlobalEnvironment.Instance.Get<RepresentManager>().RegisterMapObject<DeathArtHandle>(mapObject); 
         GlobalEnvironment.Instance.Get<RepresentManager>().RegisterMapObject<AttachArtHandle>(mapObject);
 
+        AllMapObjectList.Add(mapObject);
+
         return mapObject;
     }
 
-    public void DestroyMapObject(int id)
+    public void DestroyMapObject(MapObject mapObject)
     {
+        int id = mapObject.GetAttribute<MapObjectAttribute>().Id;
+
+        string resPath;
+        if(MapObjectResPathDict.TryGetValue(id, out resPath))
+        {
+            MapObjectResPathDict.Remove(id);
+            MapObjectArtAttribute mapObjectArtAttribute = mapObject.GetAttribute<MapObjectArtAttribute>();
+            PushPool(resPath, mapObjectArtAttribute.gameObject);
+        }
+        else
+        {
+            Debug.LogError("MapObjectResPathDict Not Recoed! id:" + id);
+        }
+
         MapObjectMgr.DeleteMapObject(id);
+        AllMapObjectList.Remove(mapObject);
+    }
+
+    public void DestroyAll()
+    {
+        while (AllMapObjectList.Count>0)
+        {
+            DestroyMapObject(AllMapObjectList[0]);
+        }
+    }
+
+    private void PushPool(string resPath,GameObject gameObject)
+    {
+        gameObject.SetActive(false);
+        if (!ResourceGameObjectPool.ContainsKey(resPath))
+        {
+            ResourceGameObjectPool.Add(resPath, new Stack<GameObject>());
+        }
+        ResourceGameObjectPool[resPath].Push(gameObject);
+    }
+    private GameObject PopPool(string resPath)
+    {
+        Stack<GameObject> gameObjects;
+        if(ResourceGameObjectPool.TryGetValue(resPath,out gameObjects))
+        {
+            if(gameObjects.Count == 0)
+            {
+                return null;
+            }
+            GameObject gameObject = gameObjects.Pop();
+            gameObject.SetActive(true);
+            return gameObject;
+        }
+        return null;
     }
 }

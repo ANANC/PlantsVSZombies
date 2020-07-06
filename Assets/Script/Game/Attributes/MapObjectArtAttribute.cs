@@ -7,7 +7,6 @@ public class MapObjectArtAttribute : IAttribute
     public GameObject gameObject;
     public Transform transform;
     public Material material;
-    public Color normalColor;
     public float MaxSpeed;
 
     public void Init()
@@ -17,10 +16,9 @@ public class MapObjectArtAttribute : IAttribute
 
     public void UnInit()
     {
-        if(gameObject != null)
-        {
-            GameObject.Destroy(gameObject);
-        }
+        gameObject = null;
+        transform = null;
+        MaxSpeed = 0;
     }
 }
 

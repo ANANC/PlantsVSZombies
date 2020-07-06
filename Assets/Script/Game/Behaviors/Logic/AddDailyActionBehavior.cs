@@ -18,7 +18,7 @@ public class AddDailyActionBehavior : LogicBehavior
 
     public override void Execute()
     {
-        MapOjectAttribute mapOjectAttribute = Info.mapObject.GetAttribute<MapOjectAttribute>();
+        MapObjectAttribute mapOjectAttribute = Info.mapObject.GetAttribute<MapObjectAttribute>();
         if (mapOjectAttribute.Hp <= 0)
         {
             return;

@@ -8,9 +8,9 @@ public class ShooterDailyAction : DailyAction
     {
         BehaviorTree behaviorTree = new BehaviorTree();
 
-        MapOjectAttribute mapOjectAttribute = mapObject.GetAttribute<MapOjectAttribute>();
+        MapObjectAttribute mapOjectAttribute = mapObject.GetAttribute<MapObjectAttribute>();
 
-        IntervalBehavior intervalBehavior = new IntervalBehavior(5, -1);
+        IntervalBehavior intervalBehavior = new IntervalBehavior(6, -1);
         TouchZombieBehavior touchZombieBehavior = new TouchZombieBehavior();
         TouchZombieBehavior.TouchZombieBehaviorInfo touchZombieInfo = new TouchZombieBehavior.TouchZombieBehaviorInfo();
         touchZombieInfo.dir = Vector3.right;

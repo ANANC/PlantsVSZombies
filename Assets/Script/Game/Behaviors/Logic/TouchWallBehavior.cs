@@ -31,7 +31,7 @@ public class TouchWallBehavior : LogicBehavior
 
             Node.Complete = true;
 
-            Info.mapObject.GetAttribute<MapOjectAttribute>().Hp = 0;
+            Info.mapObject.GetAttribute<MapObjectAttribute>().Hp = 0;
         }
     }
 

@@ -20,6 +20,7 @@ public class CellMap : Map
 
     public override void Exist()
     {
+        GardenCellDict.Clear();
     }
 
     private void InitGardenEnviorment()

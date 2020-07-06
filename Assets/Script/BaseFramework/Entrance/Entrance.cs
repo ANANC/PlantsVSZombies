@@ -6,6 +6,8 @@ public class Entrance : MonoBehaviour
 {
     void Start()
     {
+        Application.targetFrameRate = 30;
+
         FormworkRegister();
         GameRegister();
 

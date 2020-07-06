@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,7 +13,8 @@ public class BattleGameScene : GameScene
 
     public override void Init()
     {
-        GamePlay = new GardenBattleGamePlay();
+        GardenArt();
+        GardenParent.gameObject.SetActive(false);
     }
 
     public override void UnInit()
@@ -25,6 +27,7 @@ public class BattleGameScene : GameScene
         GameMapObjectMgr = GlobalEnvironment.Instance.Get<GameMapObjectManager>();
         GameMapObjectMgr.EnterBattle();
 
+        GamePlay = new GardenBattleGamePlay();
         GamePlay.Enter();
 
         InitBattleEnvironment();
@@ -33,7 +36,10 @@ public class BattleGameScene : GameScene
     public override void Exist()
     {
         GamePlay.Exist();
-        GameObject.Destroy(GardenParent.gameObject);
+        GamePlay = null;
+
+        GardenParent.gameObject.SetActive(false);
+
         GlobalEnvironment.Instance.Get<UIManager>().DestroyUI(GameDefine.UIName.WinPlant);
         GlobalEnvironment.Instance.Get<UIManager>().DestroyUI(GameDefine.UIName.FailPlant);
     }
@@ -45,23 +51,7 @@ public class BattleGameScene : GameScene
 
     public void InitBattleEnvironment()
     {
-        GardenParent = new GameObject("Garden").transform;
-        for (int h = 0; h < GameDefine.Garden.GardenHeight; h++)
-        {
-            for (int w = 0; w < GameDefine.Garden.GardenWidth; w++)
-            {
-                GameObject gameObject = GlobalEnvironment.Instance.Get<ResourceManager>().Instance(GameDefine.Path.Lawn);
-                Transform transform = gameObject.transform;
-                transform.position = new Vector3(w * GameDefine.Art.GardenCellSize.x, h * GameDefine.Art.GardenCellSize.y, 0);
-                transform.SetParent(GardenParent);
-
-                Color color = transform.GetComponent<MeshRenderer>().material.color;
-                color.r += Random.Range(-0.08f, 0.08f);
-                color.b += Random.Range(-0.08f, 0.08f);
-                color.a = 0.5f;
-                transform.GetComponent<MeshRenderer>().material.color = color;
-            }
-        }
+        GardenParent.gameObject.SetActive(true);
 
         //UIManager uiMgr = GlobalEnvironment.Instance.Get<UIManager>();
         //MainUIController mainUIController = uiMgr.OpenUI<MainUIController>(GameDefine.UIName.MainUI);
@@ -78,6 +68,27 @@ public class BattleGameScene : GameScene
 
         GameMapObjectMgr.CreateTorchwood(new Vector3(1, 2));
 
+    }
+
+    private void GardenArt()
+    {
+        GardenParent = new GameObject("Garden").transform;
+        for (int h = 0; h < GameDefine.Garden.GardenHeight; h++)
+        {
+            for (int w = 0; w < GameDefine.Garden.GardenWidth; w++)
+            {
+                GameObject gameObject = GlobalEnvironment.Instance.Get<ResourceManager>().Instance(GameDefine.Path.Lawn);
+                Transform transform = gameObject.transform;
+                transform.position = new Vector3(w * GameDefine.Art.GardenCellSize.x, h * GameDefine.Art.GardenCellSize.y, 0);
+                transform.SetParent(GardenParent);
+
+                Color color = transform.GetComponent<MeshRenderer>().material.color;
+                color.r += UnityEngine.Random.Range(-0.04f, 0.04f);
+                color.b += UnityEngine.Random.Range(-0.04f, 0.04f);
+                color.a = 0.5f;
+                transform.GetComponent<MeshRenderer>().material.color = color;
+            }
+        }
     }
 
 

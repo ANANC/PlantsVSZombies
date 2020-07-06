@@ -180,6 +180,7 @@ public class UIManager : IManager
                 }
             }
             _DestroyUI(ui, uiName);
+            m_UINameDict.Remove(uiName);
         }
         else
         {

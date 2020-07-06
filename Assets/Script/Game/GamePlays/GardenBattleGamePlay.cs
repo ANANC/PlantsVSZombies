@@ -74,7 +74,7 @@ public class GardenBattleGamePlay : GamePlay
     private void CreateZombieToMap()
     {
         ZombieCount += 1;
-        GameMapObjectMgr.CreateZombieToMap(GameDefine.Path.Zombie, new Vector3(GameDefine.Garden.GardenWidth + 0.2f,Random.Range(0, GameDefine.Garden.GardenHeight), 0));
+        GameMapObjectMgr.CreateZombieToMap(GameDefine.Path.Zombie, new Vector3(GameDefine.Garden.GardenWidth + Random.Range(0,3), Random.Range(0, GameDefine.Garden.GardenHeight), 0));
     }
 
     public void CharacterDeath(int layer, Vector3 position)

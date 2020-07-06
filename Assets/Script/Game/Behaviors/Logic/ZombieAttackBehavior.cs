@@ -33,7 +33,7 @@ public class ZombieAttackBehavior : LogicBehavior
         }
         else
         {
-            MapOjectAttribute mapOjectAttribute = Plant.GetAttribute<MapOjectAttribute>();
+            MapObjectAttribute mapOjectAttribute = Plant.GetAttribute<MapObjectAttribute>();
             mapOjectAttribute.Hp -= Info.Attack;
             if (mapOjectAttribute.Hp <= 0)
             {

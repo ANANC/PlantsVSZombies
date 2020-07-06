@@ -12,7 +12,7 @@ public class TorchwoodDailyAction : DailyAction
         TouchAttachObjectBehavior touchAttachObjectBehavior = new TouchAttachObjectBehavior();
         TouchAttachObjectBehavior.TouchBehaviorInfo touchBehaviorInfo = new TouchAttachObjectBehavior.TouchBehaviorInfo();
         touchBehaviorInfo.layerMask = 1 << LayerMask.NameToLayer(GameDefine.Layer.Bullet);
-        touchBehaviorInfo.distance = 0.8f;
+        touchBehaviorInfo.distance = 1f;
         touchBehaviorInfo.mapObject = mapObject;
         touchAttachObjectBehavior.Enviorment = touchBehaviorInfo;
         continueBehavior.AddBehavior(touchAttachObjectBehavior);

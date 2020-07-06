@@ -10,7 +10,7 @@ public class MoveArtHandle : RepresentHandle
 
     public override void Execute(MapObject mapObject)
     {
-        MapOjectAttribute attribute = mapObject.GetAttribute<MapOjectAttribute>();
+        MapObjectAttribute attribute = mapObject.GetAttribute<MapObjectAttribute>();
         MapObjectArtAttribute art = mapObject.GetAttribute<MapObjectArtAttribute>();
 
         if (attribute == null || art == null)
@@ -28,12 +28,12 @@ public class MoveArtHandle : RepresentHandle
 
         if (distance.x > art.MaxSpeed || distance.x < -art.MaxSpeed)
         {
-            distance.x = art.MaxSpeed * Time.deltaTime * (distance.x > 0 ? 1 : -1);
+            distance.x = art.MaxSpeed * (distance.x > 0 ? 1 : -1);
         }
 
         if (distance.y > art.MaxSpeed && distance.y < -art.MaxSpeed)
         {
-            distance.y = art.MaxSpeed * Time.deltaTime * (distance.y > 0 ? 1 : -1);
+            distance.y = art.MaxSpeed * (distance.y > 0 ? 1 : -1);
         }
 
         art.transform.position += distance;

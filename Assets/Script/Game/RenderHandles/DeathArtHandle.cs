@@ -11,7 +11,7 @@ public class DeathArtHandle : RepresentHandle
 
     public override void Execute(MapObject mapObject)
     {
-        MapOjectAttribute attribute = mapObject.GetAttribute<MapOjectAttribute>();
+        MapObjectAttribute attribute = mapObject.GetAttribute<MapObjectAttribute>();
         MapObjectArtAttribute art = mapObject.GetAttribute<MapObjectArtAttribute>();
 
         if (attribute == null || art == null)
@@ -24,10 +24,13 @@ public class DeathArtHandle : RepresentHandle
             return;
         }
 
-       
-        GlobalEnvironment.Instance.Get<GameMapObjectManager>().DestroyMapObject(attribute.Id);
+        int layer = art.gameObject.layer;
+        Vector3 position = art.transform.position;
+
+        GlobalEnvironment.Instance.Get<GameMapObjectManager>().DestroyMapObject(mapObject);
+
         BattleGameScene battleGameScene = (BattleGameScene)GlobalEnvironment.Instance.Get<SceneManager>().GetScene(GameDefine.Scene.Battle);
         GardenBattleGamePlay gardenBattleGamePlay = (GardenBattleGamePlay)battleGameScene.GamePlay;
-        gardenBattleGamePlay.CharacterDeath(art.gameObject.layer, art.transform.position);
+        gardenBattleGamePlay.CharacterDeath(layer, position);
     }
 }

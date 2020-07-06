@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class AttachArtHandle : RepresentHandle
 {
+    public Color Normal = new Color(0.254f, 0.2862f, 0.2941f, 1);
     public Color Red = new Color(0.735f, 0.1f, 0.1f, 1);
 
     public override RepresentManager.ExecuteOrder Order()
@@ -28,10 +29,9 @@ public class AttachArtHandle : RepresentHandle
         {
             material = mapObjectArtAttribute.transform.GetComponent<MeshRenderer>().material;
             mapObjectArtAttribute.material = material;
-            mapObjectArtAttribute.normalColor = material.color;
         }
 
-        Color color = mapObjectArtAttribute.normalColor;
+        Color color = Normal;
         if (attachAttackAttribute.Fire > 0)
         {
             color = Red;

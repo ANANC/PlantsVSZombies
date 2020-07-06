@@ -11,7 +11,7 @@ public class BulletMoveDailyAction : DailyAction
         ContinueBehavior continueMove = new ContinueBehavior(-1);
         MoveBehavior moveBehavior = new MoveBehavior();
         MoveBehavior.MoveBehaviorInfo moveBehaviorInfo = new MoveBehavior.MoveBehaviorInfo();
-        moveBehaviorInfo.speed = 1;
+        moveBehaviorInfo.speed = mapObject.GetAttribute<MapObjectArtAttribute>().MaxSpeed;
         moveBehaviorInfo.dir = Vector3.right;
         moveBehaviorInfo.targer = mapObject;
         moveBehavior.Enviorment = moveBehaviorInfo;

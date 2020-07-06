@@ -17,8 +17,8 @@ public class RepresentManager : IManager
     private Dictionary<RepresentHandle, List<MapObject>> HandleRegisterDict;
     private Dictionary<MapObject, List<RepresentHandle>> MapObjectRegisterDict;
 
-    private List<RepresentHandle> AddMapObjectList;
-    private List<RepresentHandle> DeleteMapObjectList;
+    private Dictionary<RepresentHandle, List<MapObject>> AddMapObjectDict;
+    private Dictionary<RepresentHandle, List<MapObject>> DeleteMapObjectDict;
 
     public void Init()
     {
@@ -26,8 +26,8 @@ public class RepresentManager : IManager
         ExecuteList = new List<RepresentHandle>();
         HandleRegisterDict = new Dictionary<RepresentHandle, List<MapObject>>();
         MapObjectRegisterDict = new Dictionary<MapObject, List<RepresentHandle>>();
-        AddMapObjectList = new List<RepresentHandle>();
-        DeleteMapObjectList = new List<RepresentHandle>();
+        AddMapObjectDict = new Dictionary<RepresentHandle, List<MapObject>>();
+        DeleteMapObjectDict = new Dictionary<RepresentHandle, List<MapObject>>();
     }
 
     public void UnInit()
@@ -43,13 +43,27 @@ public class RepresentManager : IManager
 
     public void Update()
     {
-        if (AddMapObjectList.Count > 0)
+        if (AddMapObjectDict.Count > 0)
         {
-            for (int index = 0; index < AddMapObjectList.Count; index++)
+            Dictionary<RepresentHandle, List<MapObject>>.Enumerator enumerator = AddMapObjectDict.GetEnumerator();
+            while (enumerator.MoveNext())
             {
-                ExecuteList.Add(AddMapObjectList[index]);
+                if (!ExecuteList.Contains(enumerator.Current.Key))
+                {
+                    ExecuteList.Add(enumerator.Current.Key);
+                }
+                List<MapObject> mapObjects;
+                if (!HandleRegisterDict.TryGetValue(enumerator.Current.Key, out mapObjects))
+                {
+                    mapObjects = new List<MapObject>();
+                    HandleRegisterDict.Add(enumerator.Current.Key, mapObjects);
+                }
+                for (int index = 0; index < enumerator.Current.Value.Count; index++)
+                {
+                    mapObjects.Add(enumerator.Current.Value[index]);
+                }
             }
-            AddMapObjectList.Clear();
+            AddMapObjectDict.Clear();
             ExecuteList.Sort((left, right) =>
             {
                 int leftOrder = (int)left.Order();
@@ -58,37 +72,55 @@ public class RepresentManager : IManager
             });
         }
 
-        if(DeleteMapObjectList.Count >0)
+        if (DeleteMapObjectDict.Count > 0)
         {
-            for (int index = 0; index < DeleteMapObjectList.Count; index++)
+            Dictionary<RepresentHandle, List<MapObject>>.Enumerator enumerator = AddMapObjectDict.GetEnumerator();
+            while (enumerator.MoveNext())
             {
-                ExecuteList.Remove(DeleteMapObjectList[index]);
+                List<MapObject> mapObjects;
+                if (HandleRegisterDict.TryGetValue(enumerator.Current.Key, out mapObjects))
+                {
+                    for (int index = 0; index < enumerator.Current.Value.Count; index++)
+                    {
+                        mapObjects.Remove(enumerator.Current.Value[index]);
+                    }
+
+                    if (mapObjects.Count == 0)
+                    {
+                        ExecuteList.Remove(enumerator.Current.Key);
+                    }
+                }
+                else
+                {
+                    Debug.LogError("RepresentManager Delete Fail.Handle Type Is Empty. type:" + enumerator.Current.Key.GetType().Name);
+                }
             }
-            DeleteMapObjectList.Clear();
+            DeleteMapObjectDict.Clear();
         }
 
-        if(ExecuteList.Count>0)
+        if (ExecuteList.Count > 0)
         {
-            for(int index =0;index< ExecuteList.Count;index++)
+            for (int index = 0; index < ExecuteList.Count; index++)
             {
                 RepresentHandle handle = ExecuteList[index];
 
                 List<MapObject> mapObjects;
                 if (!HandleRegisterDict.TryGetValue(handle, out mapObjects))
                 {
-                    Debug.Log("RepresentManager Execute Fail.Handle Register Is Empty. type:" + handle.GetType().Name);
-                    break;
-                }
-
-                if(mapObjects.Count == 0)
-                {
-                    DeleteMapObjectList.Add(handle);
+                    Debug.LogError("RepresentManager Execute Fail.Handle Register Is Empty. type:" + handle.GetType().Name);
                     continue;
                 }
 
-                for(int i = 0;i< mapObjects.Count;i++)
+                if (mapObjects.Count != 0)
                 {
-                    handle.Execute(mapObjects[i]);
+                    for (int i = 0; i < mapObjects.Count; i++)
+                    {
+                        handle.Execute(mapObjects[i]);
+                    }
+                }
+                else
+                {
+                    Debug.LogError("RepresentManager Execute count is Empty. type:" + handle.GetType().Name);
                 }
             }
         }
@@ -106,18 +138,11 @@ public class RepresentManager : IManager
             HandleInstanceDict.Add(typeName, handle);
         }
 
-        List<MapObject> mapObjects;
-        if(!HandleRegisterDict.TryGetValue(handle,out mapObjects))
+        if(!AddMapObjectDict.ContainsKey(handle))
         {
-            mapObjects = new List<MapObject>();
-            HandleRegisterDict.Add(handle, mapObjects);
+            AddMapObjectDict.Add(handle, new List<MapObject>());
         }
-        mapObjects.Add(mapObject);
-
-        if (!ExecuteList.Contains(handle))
-        {
-            AddMapObjectList.Add(handle);
-        }
+        AddMapObjectDict[handle].Add(mapObject);
 
         List<RepresentHandle> handles;
         if(!MapObjectRegisterDict.TryGetValue(mapObject,out handles))
@@ -138,15 +163,11 @@ public class RepresentManager : IManager
             return;
         }
 
-        List<MapObject> mapObjects;
-        if (HandleRegisterDict.TryGetValue(handle, out mapObjects))
+        if (!DeleteMapObjectDict.ContainsKey(handle))
         {
-            mapObjects.Remove(mapObject);
-            if (mapObjects.Count == 0)
-            {
-                DeleteMapObjectList.Add(handle);
-            }
+            DeleteMapObjectDict.Add(handle, new List<MapObject>());
         }
+        DeleteMapObjectDict[handle].Add(mapObject);
 
         List<RepresentHandle> handles;
         if (MapObjectRegisterDict.TryGetValue(mapObject, out handles))
@@ -167,16 +188,11 @@ public class RepresentManager : IManager
             for(int index = 0;index<handles.Count;index++)
             {
                 RepresentHandle handle = handles[index];
-
-                List<MapObject> mapObjects;
-                if (HandleRegisterDict.TryGetValue(handle, out mapObjects))
+                if (!DeleteMapObjectDict.ContainsKey(handle))
                 {
-                    mapObjects.Remove(mapObject);
-                    if (mapObjects.Count == 0)
-                    {
-                        DeleteMapObjectList.Add(handle);
-                    }
+                    DeleteMapObjectDict.Add(handle, new List<MapObject>());
                 }
+                DeleteMapObjectDict[handle].Add(mapObject);
             }
 
             MapObjectRegisterDict.Remove(mapObject);

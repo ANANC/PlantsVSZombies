@@ -31,10 +31,10 @@ public class BulletAttackBehavior : LogicBehavior
         if (Zombie != null)
         {
 
-            MapOjectAttribute bulletAttribute = Info.mapObject.GetAttribute<MapOjectAttribute>();
+            MapObjectAttribute bulletAttribute = Info.mapObject.GetAttribute<MapObjectAttribute>();
             if (bulletAttribute.Hp != 0)
             {
-                MapOjectAttribute mapOjectAttribute = Zombie.GetAttribute<MapOjectAttribute>();
+                MapObjectAttribute mapOjectAttribute = Zombie.GetAttribute<MapObjectAttribute>();
                 mapOjectAttribute.Hp -= Info.Attack;
 
                 bulletAttribute.Hp = 0;

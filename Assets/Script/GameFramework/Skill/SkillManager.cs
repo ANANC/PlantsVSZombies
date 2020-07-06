@@ -25,7 +25,6 @@ public class SkillManager : IManager
     }
 
 
-
     public void Update()
     {
         if (AddSkillList.Count > 0)
@@ -61,6 +60,25 @@ public class SkillManager : IManager
     {
         skill.mapObject = mapObject;
         AddSkillList.Add(skill);
+    }
+
+
+    public void ClearSkill(MapObject mapObject)
+    {
+        for(int index = 0;index< AddSkillList.Count;index++)
+        {
+            if(AddSkillList[index].mapObject == mapObject)
+            {
+                DeleteSkillList.Add(AddSkillList[index]);
+            }
+        }
+        for (int index = 0; index < ExecuteSkillList.Count; index++)
+        {
+            if (ExecuteSkillList[index].mapObject == mapObject)
+            {
+                DeleteSkillList.Add(ExecuteSkillList[index]);
+            }
+        }
     }
 
 }

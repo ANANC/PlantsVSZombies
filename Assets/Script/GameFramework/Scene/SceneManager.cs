@@ -6,6 +6,7 @@ public class SceneManager : IManager
 {
     private Dictionary<string,GameScene> SceneDict;
     private GameScene CurScene;
+    private GameScene ChangeScene;
 
 
     public void Init()
@@ -34,6 +35,13 @@ public class SceneManager : IManager
 
     public void Update()
     {
+        if (ChangeScene != null)
+        {
+            CurScene = ChangeScene;
+            ChangeScene = null;
+            CurScene.Enter();
+        }
+
         if (CurScene != null)
         {
             CurScene.Update();
@@ -47,10 +55,7 @@ public class SceneManager : IManager
             CurScene.Exist();
         }
 
-        if(SceneDict.TryGetValue(sceneKey,out CurScene))
-        {
-            CurScene.Enter();
-        }
+        SceneDict.TryGetValue(sceneKey, out ChangeScene);
     }
 
     public GameScene GetScene(string sceneType)

@@ -7,12 +7,14 @@ public class MapObjectManager:IManager
     private List<MapObject> MapObjectList;
     private Dictionary<int, MapObject> MapObjectDict;
 
+    private Stack<MapObject> PoolStack;
     private int AutoId = 1;
 
     public void Init()
     {
         MapObjectList = new List<MapObject>();
         MapObjectDict = new Dictionary<int, MapObject>();
+        PoolStack = new Stack<MapObject>();
     }
 
     public void UnInit()
@@ -32,9 +34,18 @@ public class MapObjectManager:IManager
 
     public MapObject InstanceMapObject()
     {
-        MapObject mapObject = CreateMapObject();
+        MapObject mapObject;
+        if (PoolStack.Count > 0)
+        {
+            mapObject = PoolStack.Pop();
+        }
+        else
+        {
+            mapObject = new MapObject();
+        }
 
-        mapObject.GetAttribute<MapOjectAttribute>().Id = AutoId;
+        InitMapObject(mapObject);
+        mapObject.GetAttribute<MapObjectAttribute>().Id = AutoId;
 
         MapObjectList.Add(mapObject);
         MapObjectDict.Add(AutoId, mapObject);
@@ -44,14 +55,13 @@ public class MapObjectManager:IManager
         return mapObject;
     }
 
-    private MapObject CreateMapObject()
+    private void InitMapObject(MapObject mapObject)
     {
-        MapObject mapObject = new MapObject();
         mapObject.Init();
 
         IAttribute[] attributes = new IAttribute[]
         {
-            new MapOjectAttribute(),
+            new MapObjectAttribute(),
             new MapObjectArtAttribute(),
         };
 
@@ -60,8 +70,6 @@ public class MapObjectManager:IManager
             IAttribute attribute = attributes[index];
             mapObject.AddAttribute(attribute.GetType().Name, attribute);
         }
-
-        return mapObject;
     }
 
     public void DeleteMapObject(int id)
@@ -69,13 +77,7 @@ public class MapObjectManager:IManager
         MapObject mapObject;
         if (MapObjectDict.TryGetValue(id, out mapObject))
         {
-            mapObject.UnInit();
-
-            GlobalEnvironment.Instance.Get<RepresentManager>().MapObjectUnRegisterAll(mapObject);
-            GlobalEnvironment.Instance.Get<DailyManager>().MapObjectUnReigisterAll(mapObject);
-
-            MapObjectDict.Remove(id);
-            MapObjectList.Remove(mapObject);
+            UnInitMapObjcet(mapObject);
         }
     }
 
@@ -115,15 +117,27 @@ public class MapObjectManager:IManager
     {
         for (int index = 0;index< MapObjectList.Count;index++)
         {
-            MapObject mapObject = MapObjectList[index];
-
-            mapObject.UnInit();
-
-            GlobalEnvironment.Instance.Get<RepresentManager>().MapObjectUnRegisterAll(mapObject);
-            GlobalEnvironment.Instance.Get<DailyManager>().MapObjectUnReigisterAll(mapObject);
+            UnInitMapObjcet(MapObjectList[index]);
         }
 
         MapObjectList.Clear();
         MapObjectDict.Clear();
+    }
+
+    private void UnInitMapObjcet(MapObject mapObject)
+    {
+        int id = mapObject.GetAttribute<MapObjectAttribute>().Id;
+
+        mapObject.UnInit();
+
+        GlobalEnvironment.Instance.Get<SkillManager>().ClearSkill(mapObject);
+        GlobalEnvironment.Instance.Get<BuffManager>().ClaerBuff(mapObject);
+        GlobalEnvironment.Instance.Get<RepresentManager>().MapObjectUnRegisterAll(mapObject);
+        GlobalEnvironment.Instance.Get<DailyManager>().MapObjectUnReigisterAll(mapObject);
+
+        MapObjectDict.Remove(id);
+        MapObjectList.Remove(mapObject);
+
+        PoolStack.Push(mapObject);
     }
 }

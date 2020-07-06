@@ -61,4 +61,22 @@ public class BuffManager : IManager
         Buff.mapObject = mapObject;
         AddBuffList.Add(Buff);
     }
+
+    public void ClaerBuff(MapObject mapObject)
+    {
+        for (int index = 0; index < AddBuffList.Count; index++)
+        {
+            if (AddBuffList[index].mapObject == mapObject)
+            {
+                DeleteBuffList.Add(AddBuffList[index]);
+            }
+        }
+        for (int index = 0; index < ExecuteBuffList.Count; index++)
+        {
+            if (ExecuteBuffList[index].mapObject == mapObject)
+            {
+                DeleteBuffList.Add(ExecuteBuffList[index]);
+            }
+        }
+    }
 }

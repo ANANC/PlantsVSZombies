@@ -47,7 +47,7 @@ public class TouchPlantBehavior : LogicBehavior
                 environmentInfo.Plant = plant;
                 Node.BehaviorTree.Environment.Add<TouchPlantBehaviorEnvironmentInfo>(environmentInfo);
 
-                MapOjectAttribute mapOjectAttribute = Info.mapObject.GetAttribute<MapOjectAttribute>();
+                MapObjectAttribute mapOjectAttribute = Info.mapObject.GetAttribute<MapObjectAttribute>();
                 mapOjectAttribute.Position = follow.position;
             }
 

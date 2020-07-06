@@ -11,7 +11,7 @@ public class ZombieMoveDailyAction : DailyAction
         ContinueBehavior continueMove = new ContinueBehavior(-1);
         MoveBehavior moveBehavior = new MoveBehavior();
         MoveBehavior.MoveBehaviorInfo moveBehaviorInfo = new MoveBehavior.MoveBehaviorInfo();
-        moveBehaviorInfo.speed = 0.5f;
+        moveBehaviorInfo.speed = mapObject.GetAttribute<MapObjectArtAttribute>().MaxSpeed;
         moveBehaviorInfo.dir = Vector3.left;
         moveBehaviorInfo.targer = mapObject;
         moveBehavior.Enviorment = moveBehaviorInfo;
